@@ -9,13 +9,13 @@ install it. During the setup some files are modified  to allow for a fully porta
 Fully portable means that you can install and delete the software setup without any registry changes or
 other dependencies.
 
-After the installation you will can start VsCode under this path:
+After the installation you can start VsCode under this path:
 [Installdirectory]\\[PythonVersionPath]\t\Vs Code.exe
 
 The downloaded files can be found under:
 [Installdirectory]\\Downloads
 
-They are currently not removed. This is intentional.
+They are currently not removed. This is for now during the test phase intentional but you can delete the whole directory if you want.
 
 Remember to use:
 
@@ -55,11 +55,12 @@ These packages are listed on Bernhard Walters OCP Cad Viewer github website.
 Additional python packages:
 OCP build123d ipykernel ocp_tessellate ocp_vscode
 
-The installer has a predefined set of python, build123d and extensions known to work together.
+The installer has a predefined set of python versions, python packages and Visual Studio Code extensions known to work together.
 You might change the setup but be aware that it's up to you to test if the new setup will work.
 
 To make Visual Studio Code portable a data directory is added (including subdirectories to hold a potential settings.json)
-You can find the directory at [Installdirectory]\\[PythonVersionPath]\t\data\user-data\User\
+You can find the directory at: [Installdirectory]\\[PythonVersionPath]\t\data\
+Additional subdirectories are at: [Installdirectory]\\[PythonVersionPath]\t\data\user-data\User\
 
 WinPython is modiefied to hold the PATH so Visual Studio finds the python interpreter.
 You can find the file at: [Installdirectory]\\[PythonVersionPath]\settings\winpython.ini
@@ -69,6 +70,7 @@ No additional changes are made.
 A few improvements can still be made in the setup and the code:
 
 ## To Do and ideas
+- add jupiter python package
 - somehow the OCP Cad Viewer seems to hang on the first try to use VS Code and build123d (bug to research)
 -  Moving the extraction Folder of Winpython was not possible so far - Windows does not have a move command and the NSIS solutions suck or do not work (empty directories will not be moved)
    alternativly a copy and delete is possible but a lot of small files makes this SLOW - so I leave it up to the user to copy the filestructure one level up if desired
