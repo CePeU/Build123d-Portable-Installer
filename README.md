@@ -26,8 +26,14 @@ from ocp_vscode import *
 
 as header for your python file to enable build123d and OCP Cad Viewer.
 
-After starting VsCode the first time and trying to run your first build123d project you might enncounter a problem that the viewer
-is not found. Please close the OCP Cad Viewer Window, save your file, close Visual Studio Code and restart it and try again.
+<b>After starting VsCode the first time and trying to run your first build123d project you might enncounter a problem that the viewer
+is not working correctly. To avoid this: 
+1) Create/Load a file with the python extension ".py".
+2) Close the (empty) OCP Cad Viewer.
+3) Save your python file.
+
+This should restart the OCP Cad Viewer (you should see a logo now) and you should be able to use it normally.
+If this fails close Visual Studio Code and restart it and try again.</b>
 
 ## Installed Software and changed files and directories
 
