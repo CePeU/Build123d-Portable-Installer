@@ -1,4 +1,4 @@
-   /*Copyright 2024 CePeU
+     /*Copyright 2024 CePeU
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,11 +26,13 @@ Var WinpythonURL
 Var VsCodeURL
 Var OCP
 Var VsCodePython
+Var Jupyter
 
 Var Handle_Winpython
 Var Handle_VsCode
 Var Handle_OCP
 Var Handle_VsCodePython
+Var Handle_Jupyter
 
 Var PyPath
 
@@ -89,7 +91,7 @@ Function DownloadURLPage
     StrCpy $1 "Code.exe"
     nsProcess::_FindProcess "$1"
     Pop $R0
-    MessageBox MB_OK "found $R0"
+    ;MessageBox MB_OK "found $R0"
     ${If} $R0 = 0
         ;nsProcess::_KillProcess "$1"
         MessageBox MB_OK "Please close your Visual Studio Code program (Code.exe) and RESTART the installer or the extension install migth FAIL!"
@@ -126,10 +128,16 @@ Function DownloadURLPage
     ${NSD_CreateText} 0 73u 100% 12u "ms-python.python"
     Pop $Handle_VsCodePython
 
-    ${NSD_CreateLabel} 0 90u 100% 12u "Enter Marketplace ID for OCP Cad Viewer Extenstion:"
+    ${NSD_CreateLabel} 0 88u 100% 12u "Enter Marketplace ID for OCP Cad Viewer Extension:"
     Pop $0
-    ${NSD_CreateText} 0 103u 100% 12u "bernhard-42.ocp-cad-viewer"
+    ${NSD_CreateText} 0 101u 100% 12u "bernhard-42.ocp-cad-viewer"
     Pop $Handle_OCP
+
+    ${NSD_CreateLabel} 0 116u 100% 12u "Enter Marketplace ID for Jupyter Extension:"
+    Pop $0
+    ${NSD_CreateText} 0 127u 100% 12u "ms-toolsai.jupyter"
+    Pop $Handle_Jupyter
+    
 
     nsDialogs::Show
 FunctionEnd
@@ -139,6 +147,7 @@ Function DownloadURLPageLeave
     ${NSD_GetText} $Handle_Winpython $WinpythonURL
     ${NSD_GetText} $Handle_OCP $OCP
     ${NSD_GetText} $Handle_VsCodePython $VsCodePython
+    ${NSD_GetText} $Handle_Jupyter $Jupyter
 FunctionEnd
 
 # Main installation section
@@ -251,6 +260,11 @@ Section "DownloadFile" SecDownload
         DetailPrint "Installing VsCode extension $VsCodePython"
         Sleep 3000
         nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $VsCodePython"'
+
+        DetailPrint "Installing VsCode extension $Jupyter"
+        Sleep 3000
+        nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $Jupyter"'
+
 
     ${Else}
         MessageBox MB_OK "VsCode Download failed: $0"
