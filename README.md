@@ -10,17 +10,18 @@ Fully portable means that you can install and delete the software setup without 
 other dependencies.
 
 After the installation you will can start VsCode under this path:
-[Installdirectory]\[PythonVersionPath]\t\Vs Code.exe
+[Installdirectory]\\[PythonVersionPath]\t\Vs Code.exe
 
 The downloaded files can be found under:
-[Installdirectory]\[PythonVersionPath]\Downloads
+[Installdirectory]\\[PythonVersionPath]\Downloads
 
 They are currently not removed. This is intentional.
 
 Remember to use:
 
-from build123d import *
-from ocp_vscode import *
+from build123d import \*
+from ocp_vscode import \*
+
 
 as header for your python file to enable build123d and OCP Cad Viewer.
 
@@ -57,10 +58,10 @@ The installer has a predefined set of python, build123d and extensions known to 
 You might change the setup but be aware that it's up to you to test if the new setup will work.
 
 To make Visual Studio Code portable a data directory is added (including subdirectories to hold a potential settings.json)
-You can find the directory at [Installdirectory]\[PythonVersionPath]\t\data\user-data\User\
+You can find the directory at [Installdirectory]\\[PythonVersionPath]\t\data\user-data\User\
 
 WinPython is modiefied to hold the PATH so Visual Studio finds the python interpreter.
-You can find the file at: [Installdirectory]\[PythonVersionPath]\settings\winpython.ini
+You can find the file at: [Installdirectory]\\[PythonVersionPath]\settings\winpython.ini
 
 No additional changes are made.
 
