@@ -54,6 +54,7 @@ Each Extension has a unique identifier on the marketplace which is used for the 
 The following extensions will be installed:
 1) Python (created by Microsoft. UID: ms-python.python)
 2) OCP CAD Viewer for VS Code (created by Bernhard Walter. UID: bernhard-42.ocp-cad-viewer)
+3) Jupyter Extension for Visual Studio Code (created by Microsoft. UID: ms-toolsai.jupyter)
 
 Also several additional an necessary python packages are installed using pip.
 These packages are listed on Bernhard Walters OCP Cad Viewer github website.
