@@ -4,7 +4,7 @@
 This is a NSIS based installer for a portable Windows IDE environment for build123d, python and VsCode
 
 Build123d-Portable-Installer is a web installer. It allows you to download the necessary software and to
-innstall it. During the setup some files are modified  to allow for a fully portable setup.
+install it. During the setup some files are modified  to allow for a fully portable setup.
 
 Fully portable means that you can install and delete the software setup without any registry changes or
 other dependencies.
@@ -13,14 +13,15 @@ After the installation you will can start VsCode under this path:
 [Installdirectory]\\[PythonVersionPath]\t\Vs Code.exe
 
 The downloaded files can be found under:
-[Installdirectory]\\[PythonVersionPath]\Downloads
+[Installdirectory]\\Downloads
 
 They are currently not removed. This is intentional.
 
 Remember to use:
 
-from build123d import \*
-from ocp_vscode import \*
+from build123d import *
+
+from ocp_vscode import *
 
 
 as header for your python file to enable build123d and OCP Cad Viewer.
