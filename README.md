@@ -73,17 +73,3 @@ WinPython is modiefied to hold the PATH so Visual Studio finds the python interp
 You can find the file at: [Installdirectory]\\[PythonVersionPath]\settings\winpython.ini
 
 No additional changes are made.
-
-A few improvements can still be made in the setup and the code:
-
-## To Do and ideas
-- add jupiter python package
-- somehow the OCP Cad Viewer seems to hang on the first try to use VS Code and build123d (bug to research)
--  Moving the extraction Folder of Winpython was not possible so far - Windows does not have a move command and the NSIS solutions suck or do not work (empty directories will not be moved)
-   alternativly a copy and delete is possible but a lot of small files makes this SLOW - so I leave it up to the user to copy the filestructure one level up if desired
-- A (apromximal) size check which checks if there is enough room on the install drive
-- Some more checks if files have been created or if directories allready exist
-- Better GUI/additional page to select some more things as optional --> more extensions, adjustmend of workspace settings.json, desktop links etc.
-- Some more explanations in final page
-- Ability to choose to create a start menu link
-- Enhance language support
