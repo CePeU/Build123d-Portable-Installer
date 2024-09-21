@@ -1,4 +1,4 @@
-     /*Copyright 2024 CePeU
+   /*Copyright 2024 CePeU
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 # uses inetc download plugin (https download ability): https://nsis.sourceforge.io/Inetc_plug-in
 # uses Nsisunz plugin for unziping VsCode: https://nsis.sourceforge.io/Nsisunz_plug-in
 # uses nsProcess to check if VSCode is running. This seems to be able to lead to problems: https://nsis.sourceforge.io/NsProcess_plugin
-# Also find the creators of the plugins at above URL's
+# Also find the creators of the plugins at above URL's and any legal text
 
 # Define variables
 Var WinpythonURL
@@ -27,12 +27,38 @@ Var VsCodeURL
 Var OCP
 Var VsCodePython
 Var Jupyter
+Var LiveServer
+Var FrameIndentRainbow
+Var Prettier
+
+Var WinpythonURL_Checkbox
+Var VsCodeURL_Checkbox
+Var OCP_Checkbox
+Var VsCodePython_Checkbox
+Var Jupyter_Checkbox
+Var LiveServer_Checkbox
+Var FrameIndentRainbow_Checkbox
+Var Prettier_Checkbox
 
 Var Handle_Winpython
+Var Handle_Winpython_Checkbox
 Var Handle_VsCode
+Var Handle_VsCode_Checkbox
 Var Handle_OCP
+Var Handle_OCP_Checkbox
 Var Handle_VsCodePython
+Var Handle_VsCodePython_Checkbox
 Var Handle_Jupyter
+Var Handle_Jupyter_Checkbox
+
+Var Handle_LiveServer
+Var Handle_LiveServer_Checkbox
+
+Var Handle_FrameIndentRainbow
+Var Handle_FrameIndentRainbow_Checkbox
+
+Var Handle_Prettier
+Var Handle_Prettier_Checkbox
 
 Var PyPath
 
@@ -48,7 +74,15 @@ Var VSC_DownloadLink
 !include "LogicLib.nsh"
 
 # Default installation directory (NSIS specific predefined variable)
-InstallDir "c:\Portable_Build123d"
+;InstallDir "$ProgramFiles\Portable_Build123d"
+InstallDir "C:\Portable_Build123d"
+
+# Define the name of the installer
+Name "Portable Build123d"
+OutFile "F:\Code_Projekts\Build123dInstaller\PortableBuild123dSetup.exe"
+
+# Request application privileges for Windows Vista and above
+RequestExecutionLevel user
 
 # Definitionvariables
 !define MUI_BGCOLOR "fdc514"
@@ -57,17 +91,14 @@ InstallDir "c:\Portable_Build123d"
 !define MUI_HEADERIMAGE_BITMAP "F:\Code_Projekts\NSIS\logo-banner2.bmp"
 !define MUI_PAGE_INSTALLDIRECTORY_VARIABLE $InstallDir
 
-!define MUI_FINISHPAGE_LINK_COLOR "FF0000"
+!define MUI_FINISHPAGE_LINK_COLOR "0000FF"
 !define MUI_FINISHPAGE_LINK "Build123d: https://build123d.readthedocs.io/"
 !define MUI_FINISHPAGE_LINK_LOCATION https://build123d.readthedocs.io/en/latest/index.html
+!define MUI_FINISHPAGE_TEXT "Portable Build123d has been installed on your computer.$\r$\nClick Finish to close Setup.$\r$\n$\r$\nIMPORTANT! Use the weblink for latest Information!."
 
-# Define the name of the installer
-Name "Portable Build123d"
-OutFile "PortableBuild123dSetup.exe"
-
-
-; Request application privileges for Windows Vista and above
-RequestExecutionLevel user
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "Build123dSetup website with important install information!"
+!define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
+!define MUI_FINISHPAGE_SHOWREADME "https://github.com/CePeU/Build123d-Portable-Installer"
 
 # MUI Settings
 # https://nsis.sourceforge.io/Docs/Modern%20UI/Readme.html
@@ -75,10 +106,11 @@ RequestExecutionLevel user
 # Selection Page for Installation directory
 !insertmacro MUI_PAGE_DIRECTORY
 Page custom DownloadURLPage DownloadURLPageLeave
+Page custom ExtensionsPage ExtensionsPageLeave
+Page custom SpecialsPage SpecialsPageLeave
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_LANGUAGE "English"
-
 
 # Custom page for download path input
 # https://nsis.sourceforge.io/Docs/nsDialogs/Readme.html
@@ -86,12 +118,12 @@ Function DownloadURLPage
     StrCpy $Python_DownloadLink "https://github.com/winpython/winpython/releases/download/8.2.20240618final/Winpython64-3.12.4.1.exe"
     StrCpy $VSC_DownloadLink "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-archive"
 
-    !insertmacro MUI_HEADER_TEXT "Choose download versions of components" "Choose the URLs (and versions) for Winpython and VsCode. Also choose the VsCode Extensions to install. Use the Marketplace ID for the extensions."
+    !insertmacro MUI_HEADER_TEXT "Choose download versions of components" "Choose the URLs (and versions) for Winpython and VsCode."
 
     StrCpy $1 "Code.exe"
     nsProcess::_FindProcess "$1"
     Pop $R0
-    ;MessageBox MB_OK "found $R0"
+
     ${If} $R0 = 0
         ;nsProcess::_KillProcess "$1"
         MessageBox MB_OK "Please close your Visual Studio Code program (Code.exe) and RESTART the installer or the extension install migth FAIL!"
@@ -108,56 +140,169 @@ Function DownloadURLPage
         Abort
     ${EndIf}
 
-    ${NSD_CreateLabel} 0 0u 100% 12u "Enter URL for Winpython:"
-    Pop $0
+    ${NSD_CreateCheckBox} 0 0 100% 12u "Install Winpython: Change URL below for a different version."
+    Pop $Handle_Winpython_Checkbox
+    ${NSD_Check} $Handle_Winpython_Checkbox
     ${NSD_CreateText} 0 12u 100% 12u "$Python_DownloadLink"
     Pop $Handle_Winpython
 
-    ${NSD_CreateLabel} 0 45 100% 12u "Enter URL for VsCode"
-    # The label Control Handle is put on the stack
-    Pop $0
-    # The handel ID ist retrieved with Pop from the stack and the stack is cleared
-    
+    ${NSD_CreateCheckBox} 0 45 100% 12u "Install VsCode: Change URL below for a different version."
+    Pop $Handle_VsCode_Checkbox
+    ${NSD_Check} $Handle_VsCode_Checkbox
     ${NSD_CreateText} 0 42u 100% 12u "$VSC_DownloadLink"
     # The text control Handle ist put on the stack
     Pop $Handle_VsCode
     # The handel ID ist retrieved with Pop from the stack, this time to DownloadPath variable
 
-    ${NSD_CreateLabel} 0 60u 100% 12u "Enter Marketplace ID for Marketplace Python Extension:"
-    Pop $0
-    ${NSD_CreateText} 0 73u 100% 12u "ms-python.python"
-    Pop $Handle_VsCodePython
-
-    ${NSD_CreateLabel} 0 88u 100% 12u "Enter Marketplace ID for OCP Cad Viewer Extension:"
-    Pop $0
-    ${NSD_CreateText} 0 101u 100% 12u "bernhard-42.ocp-cad-viewer"
-    Pop $Handle_OCP
-
-    ${NSD_CreateLabel} 0 116u 100% 12u "Enter Marketplace ID for Jupyter Extension:"
-    Pop $0
-    ${NSD_CreateText} 0 127u 100% 12u "ms-toolsai.jupyter"
-    Pop $Handle_Jupyter
-    
-
+    ;Note: Allow for portable git install
+    ;Note: Allow for fossil install
     nsDialogs::Show
 FunctionEnd
 
 Function DownloadURLPageLeave
+    ${NSD_GetState} $Handle_VsCode_Checkbox $VsCodeURL_Checkbox
     ${NSD_GetText} $Handle_VsCode $VsCodeURL
+    ${NSD_GetState} $Handle_Winpython_Checkbox $WinpythonURL_Checkbox
     ${NSD_GetText} $Handle_Winpython $WinpythonURL
+
+FunctionEnd
+
+Function ExtensionsPage
+    
+    !insertmacro MUI_HEADER_TEXT "Choose Visual Studio Code extensions" "Choose Visual Studio Code extensions to be installed. Use the Marketplace ID for the extensions."
+
+    nsDialogs::Create 1018
+    # The Windows Handle is put on the stack
+    Pop $0
+    # The handel ID ist retrieved with Pop from the stack and the stack is cleared
+    ${If} $0 == error
+        Abort
+    ${EndIf}
+    
+    ${NSD_CreateCheckBox} 0 0u 23% 12u "OCP Cad Viewer:"
+    Pop $Handle_OCP_Checkbox
+    ${NSD_Check} $Handle_OCP_Checkbox
+    ${NSD_CreateText} 23% 0u 35% 12u "bernhard-42.ocp-cad-viewer"
+    Pop $Handle_OCP
+
+    ${NSD_CreateCheckBox} 60% 0u 14% 12u "Python:"
+    Pop $Handle_VsCodePython_Checkbox
+    ${NSD_Check} $Handle_VsCodePython_Checkbox
+    ${NSD_CreateText} 74% 0u 26% 12u "ms-python.python"
+    Pop $Handle_VsCodePython
+
+    ${NSD_CreateCheckBox} 0 26u 23% 12u "Frame-Indent:"
+    Pop $Handle_FrameIndentRainbow_Checkbox
+    ${NSD_CreateText} 23% 26u 35% 12u "firejump.frame-indent-rainbow"
+    Pop $Handle_FrameIndentRainbow
+    
+    ${NSD_CreateCheckBox} 60% 26u 14% 12u "Jupyter:"
+    Pop $Handle_Jupyter_Checkbox
+    ${NSD_CreateText} 74% 26u 26% 12u "ms-toolsai.jupyter"
+    Pop $Handle_Jupyter
+
+    ${NSD_CreateCheckBox} 0 52u 23% 12u "Prettier:"
+    Pop $Handle_Prettier_Checkbox
+    ${NSD_CreateText} 23% 52u 35% 12u "esbenp.prettier-vscode"
+    Pop $Handle_Prettier
+
+    ${NSD_CreateCheckBox} 0 78u 23% 12u "Live Server:"
+    Pop $Handle_LiveServer_Checkbox
+    ${NSD_CreateText} 23% 78u 35% 12u "ritwickdey.LiveServer"
+    Pop $Handle_LiveServer
+    ;allow for Fossil extension
+    nsDialogs::Show
+FunctionEnd
+
+Function ExtensionsPageLeave
+    ${NSD_GetState} $Handle_OCP_Checkbox $OCP_Checkbox
+    ${NSD_GetState} $Handle_VsCodePython_Checkbox $VsCodePython_Checkbox
+    
+    ${NSD_GetState} $Handle_Jupyter_Checkbox $Jupyter_Checkbox
+    ${NSD_GetState} $Handle_FrameIndentRainbow_Checkbox $FrameIndentRainbow_Checkbox
+    ${NSD_GetState} $Handle_Prettier_Checkbox $Prettier_Checkbox
+    ${NSD_GetState} $Handle_LiveServer_Checkbox $LiveServer_Checkbox
+
     ${NSD_GetText} $Handle_OCP $OCP
     ${NSD_GetText} $Handle_VsCodePython $VsCodePython
+    
     ${NSD_GetText} $Handle_Jupyter $Jupyter
+    ${NSD_GetText} $Handle_FrameIndentRainbow $FrameIndentRainbow
+    ${NSD_GetText} $Handle_Prettier $Prettier
+    ${NSD_GetText} $Handle_LiveServer $LiveServer
+
+FunctionEnd
+
+
+Var Workspace_Checkbox
+Var Handle_Workspace_Checkbox
+Var Snippet_Checkbox
+Var Handle_Snippet_Checkbox
+Var Cadquery_Checkbox
+Var Handle_Cadquery_Checkbox
+Var StartCMD_Checkbox
+Var Handle_StartCMD_Checkbox
+Var Shortcut_Checkbox
+Var Handle_Shortcut_Checkbox
+Var Cleanup_Checkbox
+Var Handle_Cleanup_Checkbox
+
+
+Function SpecialsPage
+
+    !insertmacro MUI_HEADER_TEXT "Additional Installations" "Install additonal stuff prefered by the developer"
+    
+    nsDialogs::Create 1018
+    # The Windows Handle is put on the stack
+    Pop $0
+    # The handel ID ist retrieved with Pop from the stack and the stack is cleared
+    ${If} $0 == error
+        Abort
+    ${EndIf}
+    
+    ${NSD_CreateCheckBox} 0 0u 100% 12u "Install Cadquery (<-- there seems to be an incompatibility as of 21.09.2024)"
+    Pop $Handle_Cadquery_Checkbox
+
+    ${NSD_CreateCheckBox} 0 14u 50% 12u "Build123 workspace adjustments"
+    Pop $Handle_Workspace_Checkbox
+
+    ${NSD_CreateCheckBox} 0 28u 50% 12u "Build123 Vscode snippets"
+    Pop $Handle_Snippet_Checkbox
+
+    ${NSD_CreateCheckBox} 0 42u 50% 12u "Vscode Start.cdm for thumbdrives"
+    Pop $Handle_StartCMD_Checkbox
+    
+    ${NSD_CreateCheckBox} 0 56u 50% 12u "Create desktop shortcut"
+    Pop $Handle_Shortcut_Checkbox
+
+    ${NSD_CreateCheckBox} 0 70u 50% 12u "Cleanup and remove install files"
+    Pop $Handle_Cleanup_Checkbox
+    ${NSD_Check} $Handle_Cleanup_Checkbox
+    nsDialogs::Show
+FunctionEnd
+
+Function SpecialsPageLeave
+    ${NSD_GetState} $Handle_Cadquery_Checkbox $Cadquery_Checkbox
+    ${NSD_GetState} $Handle_Workspace_Checkbox $Workspace_Checkbox
+    ${NSD_GetState} $Handle_Snippet_Checkbox $Snippet_Checkbox
+    ${NSD_GetState} $Handle_StartCMD_Checkbox $StartCMD_Checkbox
+    ${NSD_GetState} $Handle_Shortcut_Checkbox $Shortcut_Checkbox
+    ${NSD_GetState} $Handle_Cleanup_Checkbox $Cleanup_Checkbox
 FunctionEnd
 
 # Main installation section
 Section "DownloadFile" SecDownload
-    SetOutPath "$INSTDIR"
-  
     CreateDirectory "$INSTDIR\Downloads"
     Pop $0
+    # Extract installer files if additional scripts will be used or if code will go into seperate scripts
+    ;SetOutPath "$INSTDIR\Downloads"
+    ;File /r "F:\Code_Projekts\Build123dInstaller\Data\*.*"    
     
+    SetOutPath "$INSTDIR"
+
     # Choosing own name for download file as I am not able to safely deduce it from URL
+    
+    ${If} $WinpythonURL_Checkbox == 1
     inetc::get "$WinpythonURL" "$INSTDIR\Downloads\Winpython.exe" /END
     Pop $0
     
@@ -181,7 +326,13 @@ Section "DownloadFile" SecDownload
     FileWrite $R1 '@echo off$\r$\n'
     FileWrite $R1 'call "%~dp0env_for_icons.bat"  %*$\r$\n'
     FileWrite $R1 'if not "%WINPYWORKDIR%"=="%WINPYWORKDIR1%" cd %WINPYWORKDIR1%$\r$\n'
-    FileWrite $R1 'cmd.exe /k "pip install OCP build123d ipykernel ocp_tessellate ocp_vscode"$\r$\n'
+    
+    ${if} $Cadquery_Checkbox == 1
+        FileWrite $R1 'cmd.exe /k "pip install cadquery OCP build123d ipykernel ocp_tessellate ocp_vscode"$\r$\n'
+    ${Else}
+        FileWrite $R1 'cmd.exe /k "pip install OCP build123d ipykernel ocp_tessellate ocp_vscode"$\r$\n'
+    ${EndIf}
+
     FileClose $R1
     Pop $R1
     ;MessageBox MB_OK "Filewrite successfull? $R1" --> Could/should make a check here
@@ -210,8 +361,10 @@ Section "DownloadFile" SecDownload
     ${Else}
         MessageBox MB_OK "Winpython Download failed: $0"
     ${EndIf}
+    ${Endif} #Endif of installation of python
 
     # Download Vscode and save it as Vscode.zip as predefinded file name
+    ${if} $VsCodeURL_Checkbox == 1
     inetc::get "$VsCodeURL" "$INSTDIR\Downloads\VsCode.zip" /END
     Pop $0
 
@@ -231,61 +384,96 @@ Section "DownloadFile" SecDownload
                 Sleep 3000
             ${EndIf}
         
+        ${if} $Workspace_Checkbox == 1
         # This is a personal preference and could be omitted
-        ;DetailPrint "Adjusting VsCode Workspace settings in $INSTDIR\$PyPath\t\data\user-data\User\settings.json"
-        ;ClearErrors
-        ;FileOpen $R1 "$INSTDIR\$PyPath\t\data\user-data\User\settings.json" a
-        ;FileWrite $R1 '{$\r$\n'
-        ;FileWrite $R1 '"security.workspace.trust.untrustedFiles": "open",$\r$\n'
+        DetailPrint "Adjusting VsCode Workspace settings in $INSTDIR\$PyPath\t\data\user-data\User\settings.json"
+        Sleep 2000
+        ClearErrors
+        FileOpen $R1 "$INSTDIR\$PyPath\t\data\user-data\User\settings.json" a
+        FileWrite $R1 '{$\r$\n'
+        FileWrite $R1 '"security.workspace.trust.untrustedFiles": "open",$\r$\n'
         ;FileWrite $R1 '"git.enabled": true,$\r$\n'
-        ;FileWrite $R1 '"workbench.colorCustomizations": {$\r$\n'
-        ;FileWrite $R1 '"editor.lineHighlightBackground": "#ffffff36",$\r$\n'
-        ;FileWrite $R1 '"editor.lineHighlightBorder": "#ffff00"$\r$\n'
-        ;FileWrite $R1 '}$\r$\n'
-        ;FileClose $R1
-        ;Pop $R1
-        
+        FileWrite $R1 '"workbench.colorCustomizations": {$\r$\n'
+        FileWrite $R1 '"editor.lineHighlightBackground": "#ffffff36",$\r$\n'
+        FileWrite $R1 '"editor.lineHighlightBorder": "#ffff00"$\r$\n'
+        FileWrite $R1 '}$\r$\n'
+        FileClose $R1
+        Pop $R1
+        ${EndIf}
+
+    ${if} $StartCMD_Checkbox == 1
+    DetailPrint "Creating VsCode '$INSTDIR\$PyPath\t\VsCode_Start.cmd'"
+    Sleep 2000
+    FileOpen $R1 "$INSTDIR\$PyPath\VsCode_Start.cmd" w
+    ClearErrors
+    FileWrite $R1 "set drivepath=%CD%$\r$\n"
+    FileWrite $R1 "set OutputTo=%drivepath%\settings\winpython.ini$\r$\n"
+    FileWrite $R1 "ren %drivepath%\settings\winpython.ini winpython.old$\r$\n"
+    FileWrite $R1 "echo [debug]>%OutputTo%$\r$\n"
+    FileWrite $R1 "echo state = disabled>>%OutputTo%$\r$\n"
+    FileWrite $R1 "echo [environment]>>%OutputTo%$\r$\n"
+    FileWrite $R1 "echo PATH=%%PATH%%"
+    ;FileWrite $R1 ";%drivepath%\t\data\Git\bin"
+    Filewrite $R1 ">>%OutputTo%$\r$\n"
+    FileWrite $R1 'start "" "VS Code.exe"$\r$\n'
+    ${EndIf}
+
         # Installing necessary VsCode extensions
-        
-        # Check if VSCode is running. If yes the extension installation will fail.
-        
+        # Check if VSCode is running. If yes the extension installation will fail. This seems to be mainly the case if the setup is compiled and directly run
+        # from VsCode. Possibly it is because of the paths in the portable setup which is also used for development. But better safe than sorry. Also it helps
+        # as a reminder for the developer.
+
         StrCpy $3 "$INSTDIR\$PyPath\t\bin\"
         SetOutPath $3
         
-
-        DetailPrint "Installinng VsCode extension $OCP"
+        ${if} $OCP_Checkbox == 1
+        DetailPrint "Installing VsCode extension $OCP"
         Sleep 3000
         nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $OCP"'
+        ${EndIf}
 
+        ${if} $VsCodePython_Checkbox == 1
         DetailPrint "Installing VsCode extension $VsCodePython"
         Sleep 3000
         nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $VsCodePython"'
-
+        ${EndIf}
+        
+        ${if} $Jupyter_Checkbox == 1
         DetailPrint "Installing VsCode extension $Jupyter"
         Sleep 3000
         nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $Jupyter"'
+        ${EndIf}
 
+        ${if} $FrameIndentRainbow_Checkbox == 1
+        DetailPrint "Installing VsCode extension $FrameIndentRainbow"
+        Sleep 3000
+        nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $FrameIndentRainbow"'
+        ${EndIf}
+
+        ${if} $LiveServer_Checkbox == 1
+        DetailPrint "Installing VsCode extension $LiveServer"
+        Sleep 3000
+        nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $LiveServer"'
+        ${EndIf}
+
+        ${if} $Prettier_Checkbox == 1
+        DetailPrint "Installing VsCode extension $Prettier"
+        Sleep 3000
+        nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $Prettier"'
+        ${EndIf}
 
     ${Else}
         MessageBox MB_OK "VsCode Download failed: $0"
     ${EndIf}
-# No deletion of downloaded files is made, this is intentional for version 1.0 and can easily be changeds
+    ${Endif}
+
+
+    ${if} $Shortcut_Checkbox  == 1
+        CreateShortcut "$desktop\Build123d.lnk" "$instdir\$PyPath\Vs Code.exe"
+    ${EndIf}
+
+    ${if} $Cleanup_Checkbox == 1
+        RMDir /r "$INSTDIR\Downloads"
+    ${EndIf}
+
 SectionEnd
-
-# To Do and ideas
-
-# Moving the extraction Folder of Winpython was not possible so far - windows does not have a move command and the NSIS solutions suck or do not work (empty directories will not be moved)
-# alternativly a copy and delete is possible but a lot of small files makes this SLOW - so I leave it up to the user
-
-# A (apromximal) size check which checks if there is enough room on the install drive
-
-# Some more checks if files have been created or if directories allready exist
-
-# Better GUI/additional page to select some more things as optional --> more extensions, adjustmend of workspace settings.json, desktop links etc.
-
-# Some more explanations in final page
-
-# Ability to choose to create a start menu link
-
-# Enhance language support
-
