@@ -15,7 +15,7 @@ After the installation you can start VsCode under this path:
 The downloaded files can be found under:
 [Installdirectory]\\Downloads
 
-They are currently not removed. This is for now during the test phase intentional but you can delete the whole directory if you want.
+The presseting now is that the installation files are removed but you can change that.
 
 Remember to use:
 
@@ -23,10 +23,9 @@ from build123d import *
 
 from ocp_vscode import *
 
-
 as header for your python file to enable build123d and OCP Cad Viewer.
 
-<b>After starting VsCode the first time and trying to run your first build123d project you might enncounter a problem that the viewer
+<b>After starting VsCode the first time and trying to run your first build123d project you might encounter a problem that the viewer
 is not working correctly. To avoid this: 
 1) Create/Load a file with the python extension ".py".
 2) Close the (empty) OCP Cad Viewer.
@@ -51,15 +50,17 @@ https://marketplace.visualstudio.com/VSCode
 The Visual Studio Code extensions are installed using Visual Studio Code and the Visual Studio Code Marketplace.
 Each Extension has a unique identifier on the marketplace which is used for the installation process.
 
-The following extensions will be installed:
+The following extensions will be installed if not unchecked from the installer:
 1) Python (created by Microsoft. UID: ms-python.python)
 2) OCP CAD Viewer for VS Code (created by Bernhard Walter. UID: bernhard-42.ocp-cad-viewer)
-3) Jupyter Extension for Visual Studio Code (created by Microsoft. UID: ms-toolsai.jupyter)
 
-Also several additional an necessary python packages are installed using pip.
+There are several other extensions I found usefull or which make sense to use like the 
+Jupyter Extension for Visual Studio Code (created by Microsoft. UID: ms-toolsai.jupyter)
+
+Also several additional and necessary python packages are installed using pip.
 These packages are listed on Bernhard Walters OCP Cad Viewer github website.
 
-Additional python packages:
+As of now these additional python packages are:
 OCP build123d ipykernel ocp_tessellate ocp_vscode
 
 The installer has a predefined set of python versions, python packages and Visual Studio Code extensions known to work together.
@@ -72,4 +73,4 @@ Additional subdirectories are at: [Installdirectory]\\[PythonVersionPath]\t\data
 WinPython is modiefied to hold the PATH so Visual Studio finds the python interpreter.
 You can find the file at: [Installdirectory]\\[PythonVersionPath]\settings\winpython.ini
 
-No additional changes are made.
+No additional changes are made unless you enable them to be made (like the desktop link, changes to the workspace json etc.).
