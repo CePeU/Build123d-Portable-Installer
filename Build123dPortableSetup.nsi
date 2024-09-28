@@ -301,7 +301,7 @@ Function SpecialsPage
     ${NSD_CreateCheckBox} 0 42u 50% 12u "Vscode Build123d snippets"
     Pop $Handle_Snippet_Checkbox
 
-    ${NSD_CreateCheckBox} 0 14u 50% 12u "ThumbdriveAdjustment.cmd and Vscode.cmd"
+    ${NSD_CreateCheckBox} 0 14u 60% 12u "ThumbdriveAdjustment.cmd and Vscode.cmd"
     Pop $Handle_StartCMD_Checkbox
     
     ${NSD_CreateCheckBox} 0 0u 50% 12u "Create desktop shortcut"
@@ -554,6 +554,7 @@ Section "DownloadFile" SecDownload
                         FileWrite $R1 ";$VsCodeINSTDIR\data\Fossil"
                     ${EndIf}
                     Filewrite $R1 "$\r$\n"
+                    Filewrite $R1 'start "" "$VsCodeINSTDIR\Code.exe"$\r$\n'
                     FileClose $R1
                     Pop $R1
                 ${EndIf}
