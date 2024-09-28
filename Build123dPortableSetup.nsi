@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-# Version 1.4.3
+# Version 1.4.4
 # Basis is the NSIS compiler which can be found here: https://nsis.sourceforge.io/Main_Page
 # Additional plug-ins not in the basis download of NSIS.
 # uses 7zip plugin: https://nsis.sourceforge.io/Nsis7z_plug-in
