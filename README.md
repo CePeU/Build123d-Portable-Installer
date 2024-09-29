@@ -15,13 +15,12 @@ After the installation you can start VsCode under this path:<br>
 The downloaded files can be found under:<br>
 <b>[Installdirectory]\\Downloads</b>
 
-The presset is that the installation files are removed but you can change that.
+The current preset is that the installation files are removed but you can change that.
 
 Remember to use:
 
-from build123d import *
-
-from ocp_vscode import *
+<i>from build123d import *</i></br>
+<i>from ocp_vscode import *</i></br>
 
 as header for your python file to enable build123d and OCP Cad Viewer.
 
