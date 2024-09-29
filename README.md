@@ -9,13 +9,13 @@ install it. During the setup some files are modified  to allow for a fully porta
 Fully portable means that you can install and delete the software setup without any registry changes or
 other dependencies.
 
-After the installation you can start VsCode under this path:
-[Installdirectory]\\[PythonVersionPath]\t\Vs Code.exe
+After the installation you can start VsCode under this path:<br>
+<b>[Installdirectory]\\[PythonVersionPath]\t\Vs Code.exe</b>
 
-The downloaded files can be found under:
-[Installdirectory]\\Downloads
+The downloaded files can be found under:<br>
+<b>[Installdirectory]\\Downloads</b>
 
-The presseting now is that the installation files are removed but you can change that.
+The presset is that the installation files are removed but you can change that.
 
 Remember to use:
 
@@ -67,10 +67,17 @@ The installer has a predefined set of python versions, python packages and Visua
 You might change the setup but be aware that it's up to you to test if the new setup will work.
 
 To make Visual Studio Code portable a data directory is added (including subdirectories to hold a potential settings.json)
-You can find the directory at: [Installdirectory]\\[PythonVersionPath]\t\data\
-Additional subdirectories are at: [Installdirectory]\\[PythonVersionPath]\t\data\user-data\User\
+You can find the directory at:
 
-WinPython is modiefied to hold the PATH so Visual Studio finds the python interpreter.
-You can find the file at: [Installdirectory]\\[PythonVersionPath]\settings\winpython.ini
+<b>[Installdirectory]\\[PythonVersionPath]\t\data</b>
+
+Additional subdirectories are at:
+
+<b>[Installdirectory]\\[PythonVersionPath]\t\data\user-data\User</b>
+
+WinPython is modified to hold the PATH so Visual Studio finds the python interpreter.
+You can find the file at:
+
+<b>[Installdirectory]\\[PythonVersionPath]\settings\winpython.ini</b>
 
 No additional changes are made unless you enable them to be made (like the desktop link, changes to the workspace json etc.).
