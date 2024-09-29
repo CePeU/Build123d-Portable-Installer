@@ -1,13 +1,18 @@
 # Build123d-Portable-Installer
 
 ## General Information and first start
-This is a NSIS based installer for a portable Windows IDE environment for build123d, python and VsCode
+This is a NSIS based installer for a portable Windows IDE environment for build123d, python and VsCode.
 
 Build123d-Portable-Installer is a web installer. It allows you to download the necessary software and to
 install it. During the setup some files are modified  to allow for a fully portable setup.
 
 Fully portable means that you can install and delete the software setup without any registry changes or
-other dependencies.
+other dependencies. You can copy the installation to any hard drive you like. You also can use it on your 
+USB thumb drive - just copy your installation there. 
+Install it with the thumbdrive option and execute ThumbdriveAdjust.cmd after the copy operation and you are
+ready to go. 
+For this reason you also can uncheck the python part and use the installer as
+a setup for a portable Visual Studio Code setup (In that case use VsCode.cmd to start you VsCode session).
 
 After the installation you can start VsCode under this path:<br>
 <b>[Installdirectory]\\[PythonVersionPath]\t\Vs Code.exe</b>
