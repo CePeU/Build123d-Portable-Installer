@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-# Version 1.4.4
+# Version 1.5.0
 # Basis is the NSIS compiler which can be found here: https://nsis.sourceforge.io/Main_Page
 # Additional plug-ins not in the basis download of NSIS.
 # uses 7zip plugin: https://nsis.sourceforge.io/Nsis7z_plug-in
@@ -89,9 +89,9 @@ RequestExecutionLevel user
 
 # Definitionvariables
 !define MUI_BGCOLOR "fdc514"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "F:\Code_Projekts\NSIS\logo2.bmp"
-!define MUI_ICON "F:\Code_Projekts\NSIS\logo.ico"
-!define MUI_HEADERIMAGE_BITMAP "F:\Code_Projekts\NSIS\logo-banner2.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "F:\Code_Projekts\Build123dInstaller\Data\logo.bmp"
+!define MUI_ICON "F:\Code_Projekts\Build123dInstaller\Data\logo.ico"
+!define MUI_HEADERIMAGE_BITMAP "F:\Code_Projekts\Build123dInstaller\Data\logo-banner.bmp"
 !define MUI_PAGE_INSTALLDIRECTORY_VARIABLE $InstallDir
 
 !define MUI_FINISHPAGE_LINK_COLOR "0000FF"
@@ -324,6 +324,7 @@ FunctionEnd
 
 # Main installation section
 Section "DownloadFile" SecDownload
+AddSize 7256000
     CreateDirectory "$INSTDIR\Downloads"
     Pop $0
     # Extract installer files if additional scripts will be used or if code will go into seperate scripts
@@ -616,7 +617,11 @@ Section "DownloadFile" SecDownload
                     ${Else}
                         CreateShortcut "$desktop\VsCode_Portable.lnk" "$VsCodeINSTDIR\VsCode.cmd"
                 ${Endif}
+            ${EndIf}
 
+            ${if} $Snippet_Checkbox == 1
+                SetOutPath "$VsCodeINSTDIR\data\user-data\User\snippets"
+                File "F:\Code_Projekts\Build123dInstaller\Data\build123d-OCP.code-snippets"
             ${EndIf}
 
             ${Else}
