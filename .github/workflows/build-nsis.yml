@@ -26,12 +26,17 @@ jobs:
       with:
         arguments: "/V3"
         script-file: "Build123dPortableSetup.nsi"
-        additional-plugin-paths: ${{ github.workspace }}\NSIS_Plugins
+        additional-plugin-paths: |
+          ${{ github.workspace }}\NSIS_Plugins\Plugin
+          ${{ github.workspace }}\NSIS_Plugins\Plugins
+          ${{ github.workspace }}\NSIS_Plugins\_release_unicode
+          ${{ github.workspace }}\NSIS_Plugins\Plugins\amd64-unicode
+          
 
-          # NsProcess\Plugin\
-          # Inetc\Plugins\
-          # Nsisunz\nsisunz\Release\
-          # Nsis7z_921\
+        # NsProcess\Plugin\
+        # Inetc\Plugins\
+        # Nsisunz\nsisunz\Release\
+        # Nsis7z_921\
 
   # TODO: publishing        
   # publish-nsis:
