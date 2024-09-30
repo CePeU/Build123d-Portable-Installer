@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-# Version 1.5.0
+# Version 1.5.1
 # Basis is the NSIS compiler which can be found here: https://nsis.sourceforge.io/Main_Page
 # Additional plug-ins not in the basis download of NSIS.
 # uses 7zip plugin: https://nsis.sourceforge.io/Nsis7z_plug-in
@@ -324,7 +324,7 @@ FunctionEnd
 
 # Main installation section
 Section "DownloadFile" SecDownload
-AddSize 7256000
+AddSize 2256000
     CreateDirectory "$INSTDIR\Downloads"
     Pop $0
     # Extract installer files if additional scripts will be used or if code will go into seperate scripts
