@@ -21,6 +21,8 @@ limitations under the License.*/
 # uses nsProcess to check if VSCode is running. This seems to be able to lead to problems: https://nsis.sourceforge.io/NsProcess_plugin
 # Also find the creators of the plugins at above URL's and any legal text
 !verbose 4
+!echo "NSIS ${NSIS_VERSION} (${NSIS_PACKEDVERSION}, CS=${NSIS_CHAR_SIZE}, ${NSIS_CPU})"
+
 Unicode True
 # Define variables
 Var WinpythonURL
