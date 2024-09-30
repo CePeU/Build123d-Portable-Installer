@@ -143,7 +143,7 @@ Function DownloadURLPage
     Pop $R0
 
     ${If} $R0 = 0
-        MessageBox MB_OK "Please close your Visual Studio Code program (Code.exe) and RESTART the installer or the extension install migth FAIL!"
+        MessageBox MB_OK "Please close your Visual Studio Code program (Code.exe) and RESTART the installer or the extension install might FAIL!"
         Pop $R0
         Sleep 500
     ${EndIf}
@@ -358,9 +358,9 @@ AddSize 7256000
             FileWrite $R1 'if not "%WINPYWORKDIR%"=="%WINPYWORKDIR1%" cd %WINPYWORKDIR1%$\r$\n'
             
                 ${if} $Cadquery_Checkbox == 1
-                    FileWrite $R1 'cmd.exe /k "pip install cadquery OCP build123d ipykernel ocp_tessellate ocp_vscode"$\r$\n'
+                    FileWrite $R1 'cmd.exe /k "pip install cadquery cadquery-ocp build123d ipykernel ocp_tessellate ocp_vscode"$\r$\n'
                 ${Else}
-                    FileWrite $R1 'cmd.exe /k "pip install OCP build123d ipykernel ocp_tessellate ocp_vscode"$\r$\n'
+                    FileWrite $R1 'cmd.exe /k "pip install cadquery-ocp build123d ipykernel ocp_tessellate ocp_vscode"$\r$\n'
                 ${EndIf}
             FileClose $R1
             Pop $R1
