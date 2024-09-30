@@ -89,9 +89,9 @@ RequestExecutionLevel user
 
 # Definitionvariables
 !define MUI_BGCOLOR "fdc514"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "F:\Code_Projekts\Build123dInstaller\Data\logo.bmp"
-!define MUI_ICON "F:\Code_Projekts\Build123dInstaller\Data\logo.ico"
-!define MUI_HEADERIMAGE_BITMAP "F:\Code_Projekts\Build123dInstaller\Data\logo-banner.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "Data\logo.bmp"
+!define MUI_ICON "Data\logo.ico"
+!define MUI_HEADERIMAGE_BITMAP "Data\logo-banner.bmp"
 !define MUI_PAGE_INSTALLDIRECTORY_VARIABLE $InstallDir
 
 !define MUI_FINISHPAGE_LINK_COLOR "0000FF"
