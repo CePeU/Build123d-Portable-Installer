@@ -131,7 +131,7 @@ Var FossilURL
 # Custom page for download path input
 # https://nsis.sourceforge.io/Docs/nsDialogs/Readme.html
 Function DownloadURLPage
-    StrCpy $Python_DownloadLink "https://github.com/winpython/winpython/releases/download/8.2.20240618final/Winpython64-3.12.4.1.exe"
+    StrCpy $Python_DownloadLink "https://github.com/winpython/winpython/releases/download/8.2.20240618final/Winpython64-3.12.4.1dot.exe"
     StrCpy $VSC_DownloadLink "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-archive"
     StrCpy $Git_DownloadLink "https://github.com/git-for-windows/git/releases/download/v2.46.1.windows.1/PortableGit-2.46.1-64-bit.7z.exe"
     StrCpy $Fossil_DownloadLink "https://www.fossil-scm.org/home/uv/fossil-w64-2.24.zip"
