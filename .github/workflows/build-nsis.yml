@@ -18,6 +18,8 @@ jobs:
         curl -O https://nsis.sourceforge.io/mediawiki/images/1/11/Nsis7z_921.zip
         ls -R
         7z x -o"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.zip"
+        Remove-Item NSIS_Plugins\Plugin\nsProcess.dll
+        Move-Item -Path NSIS_Plugins\Plugin\nsProcessW.dll -Destination NSIS_Plugins\Plugin\nsProcess.dll
     - name: list dirs
       run: |
         ls -R
