@@ -17,7 +17,7 @@ jobs:
         curl -O https://nsis.sourceforge.io/mediawiki/images/1/1c/Nsisunz.zip
         curl -O https://nsis.sourceforge.io/mediawiki/images/1/11/Nsis7z_921.zip
         ls -R
-        7z x -o*"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/*.zip"
+        7z x -o*"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.zip"
     - name: list dirs
       run: |
         ls -R
@@ -27,12 +27,12 @@ jobs:
         arguments: "/V3"
         script-file: "Build123dPortableSetup.nsi"
         additional-plugin-paths: |
-          ${{ github.workspace }}/NSIS_Plugins
+          ${{ github.workspace }}\NSIS_Plugins
 
-          # NsProcess\Plugin\
-          # Inetc\Plugins\
-          # Nsisunz\nsisunz\Release\
-          # Nsis7z_921\
+        # NsProcess\Plugin\
+        # Inetc\Plugins\
+        # Nsisunz\nsisunz\Release\
+        # Nsis7z_921\
 
   # TODO: publishing        
   # publish-nsis:
