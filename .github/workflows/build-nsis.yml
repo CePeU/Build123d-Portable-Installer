@@ -26,7 +26,7 @@ jobs:
     - name: Create installer
       uses: joncloud/makensis-action@v4.1
       with:
-        arguments: "/V3"
+        arguments: "/V4"
         script-file: "Build123dPortableSetup.nsi"
         additional-plugin-paths: |
           ${{ github.workspace }}\NSIS_Plugins\Plugin
