@@ -19,9 +19,9 @@ jobs:
         7z x -o"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.zip"
         ls -R
         Remove-Item NSIS_Plugins\Plugin\nsProcess.dll
-        Move-Item -Path NSIS_Plugins\Plugin\nsProcessW.dll -Destination NSIS_Plugins\Plugins\amd64-unicode\nsProcess.dll
-        Move-Item -Path "NSIS_Plugins\NSISunzU\Plugin unicode\nsisunz.dll" -Destination NSIS_Plugins\Plugins\amd64-unicode\nsisunz.dll
-        Move-Item -Path NSIS_Plugins\_release_unicode\nsis7z.dll -Destination NSIS_Plugins\Plugins\amd64-unicode\nsis7z.dll
+        Move-Item -Path NSIS_Plugins\Plugin\nsProcessW.dll -Destination NSIS_Plugins\Plugins\x86-unicode\nsProcess.dll
+        Move-Item -Path "NSIS_Plugins\NSISunzU\Plugin unicode\nsisunz.dll" -Destination NSIS_Plugins\Plugins\x86-unicode\nsisunz.dll
+        Move-Item -Path NSIS_Plugins\_release_unicode\nsis7z.dll -Destination NSIS_Plugins\Plugins\x86-unicode\nsis7z.dll
     - name: list dirs
       run: |
         ls -R
