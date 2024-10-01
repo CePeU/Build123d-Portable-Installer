@@ -12,7 +12,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-# Version 1.5.1
 # Basis is the NSIS compiler which can be found here: https://nsis.sourceforge.io/Main_Page
 # Additional plug-ins not in the basis download of NSIS.
 # uses 7zip plugin: https://nsis.sourceforge.io/Nsis7z_plug-in
@@ -329,10 +328,7 @@ FunctionEnd
 Section "DownloadFile" SecDownload
 AddSize 2256000
     CreateDirectory "$INSTDIR\Downloads"
-    Pop $0
-    # Extract installer files if additional scripts will be used or if code will go into seperate scripts
-    ;SetOutPath "$INSTDIR\Downloads"
-    ;File /r "F:\Code_Projekts\Build123dInstaller\Data\*.*"    
+    Pop $0 
     SetOutPath "$INSTDIR"
 
     # Choosing own name for download file as I am not able to safely deduce it from URL    
@@ -624,7 +620,7 @@ AddSize 2256000
 
             ${if} $Snippet_Checkbox == 1
                 SetOutPath "$VsCodeINSTDIR\data\user-data\User\snippets"
-                File "build123d-OCP.code-snippets"
+                File "Data\build123d-OCP.code-snippets"
             ${EndIf}
 
             ${Else}
