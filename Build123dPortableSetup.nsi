@@ -85,7 +85,7 @@ InstallDir "C:\Portable_Build123d"
 
 # Define the name of the installer
 Name "Portable Build123d"
-OutFile "F:\Code_Projekts\Build123dInstaller\PortableBuild123dSetup.exe"
+OutFile "Build123dInstaller\PortableBuild123dSetup.exe"
 
 # Request application privileges for Windows Vista and above
 RequestExecutionLevel user
@@ -624,7 +624,7 @@ AddSize 2256000
 
             ${if} $Snippet_Checkbox == 1
                 SetOutPath "$VsCodeINSTDIR\data\user-data\User\snippets"
-                File "F:\Code_Projekts\Build123dInstaller\Data\build123d-OCP.code-snippets"
+                File "build123d-OCP.code-snippets"
             ${EndIf}
 
             ${Else}
