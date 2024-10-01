@@ -15,13 +15,13 @@ jobs:
         curl -O https://nsis.sourceforge.io/mediawiki/images/1/18/NsProcess.zip
         curl -O https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip
         curl -O https://nsis.sourceforge.io/mediawiki/images/5/5a/NSISunzU.zip
-        curl -O https://nsis.sourceforge.io/mediawiki/images/1/11/Nsis7z_921.zip
+        curl -O https://nsis.sourceforge.io/mediawiki/images/6/69/Nsis7z_19.00.7z
         7z x -o"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.zip"
         ls -R
         Remove-Item NSIS_Plugins\Plugin\nsProcess.dll
         Move-Item -Path NSIS_Plugins\Plugin\nsProcessW.dll -Destination NSIS_Plugins\Plugins\x86-unicode\nsProcess.dll
         Move-Item -Path "NSIS_Plugins\NSISunzU\Plugin unicode\nsisunz.dll" -Destination NSIS_Plugins\Plugins\x86-unicode\nsisunz.dll
-        Move-Item -Path NSIS_Plugins\_release_unicode\nsis7z.dll -Destination NSIS_Plugins\Plugins\x86-unicode\nsis7z.dll
+        # Move-Item -Path NSIS_Plugins\_release_unicode\nsis7z.dll -Destination NSIS_Plugins\Plugins\x86-unicode\nsis7z.dll
     - name: list dirs
       run: |
         ls -R
