@@ -1,0 +1,177 @@
+{
+	// Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	//
+	// recommended to bind "Snippets: Fill file with Snippet" to e.g. CTRL + ALT + N
+	// Original file can be found at : https://gist.github.com/jdegenstein/6233ac42632d9098c99da029fe0615c2
+	
+	"build123d-OCP": {
+		"isFileTemplate": true,
+		"scope": "python",
+		"prefix": "build123d template",
+		"body": [
+			"# %%",
+			"from build123d import *$1", //cursor starts here, press ctrl+enter to run then tab
+			"from ocp_vscode import *",
+			"from inspect import currentframe as cf",
+			"",
+			"set_port(3939)",
+			"show_clear()",
+			"set_defaults(ortho=True, default_edgecolor=\"#121212\")",
+			"densa = 7800 / 1e6  # carbon steel density g/mm^3",
+			"densb = 2700 / 1e6  # aluminum alloy",
+			"densc = 1020 / 1e6  # ABS",
+			"# %%",
+			"",
+			"$0", //cursor ends here, begin file editing as usual, ctrl+enter to run when ready
+			"",
+			"",
+			"",
+			"",
+			"",
+			"# print(f\"\\npart mass = {p.part.volume*densa}\")",
+			"classes = (BuildPart, BuildSketch, BuildLine)  # for OCP-vscode",
+			"set_colormap(ColorMap.seeded(colormap=\"rgb\", alpha=1, seed_value=\"vscod\"))",
+			"variables, s_o, s_n, slocal = (list(cf().f_locals.items()), [], [], False)",
+			"for name, obj in variables:",
+			"    if (",
+			"        isinstance(obj, classes)",
+			"        and not name.startswith(\"_\")",
+			"        and not name.startswith(\"obj\")",
+			"        and not obj._obj is None",
+			"    ):",
+			"        if obj._obj_name != \"sketch\" or slocal:",
+			"            s_o.append(obj), s_n.append(f\"{name}.{obj._obj_name}\")",
+			"        elif obj._obj_name == \"sketch\":",
+			"            s_o.append(obj.sketch), s_n.append(f\"{name}.{obj._obj_name}\")",
+			"show(",
+			"    *s_o,",
+			"    # ,",
+			"    names=s_n,",
+			"    reset_camera=Camera.KEEP,",
+			")",
+			"",
+		],
+		"description": "build123d python template"
+	},
+	"BuildPart": {
+		"scope": "python",
+		"prefix": "?bdp",
+		"body": [
+			"with BuildPart() as p:",
+			"    $0"
+		]
+	},
+	"BuildSketch": {
+		"scope": "python",
+		"prefix": "?bds",
+		"body": [
+			"with BuildSketch($1) as s:",
+			"    $0"
+		]
+	},
+	"BuildSketchAndExtrude": {
+		"scope": "python",
+		"prefix": "?ebds",
+		"body": [
+			"with BuildSketch($1) as s:",
+			"    ",
+			"extrude(amount=$0)"
+		]
+	},
+	"BuildLine": {
+		"scope": "python",
+		"prefix": "?bdl",
+		"body": [
+			"with BuildLine() as l:",
+			"    $0"
+		]
+	},
+	"Locations": {
+		"scope": "python",
+		"prefix": "?loc",
+		"body": [
+			"with Locations(($0)):",
+			"    "
+		]
+	},
+	"PolarLocations": {
+		"scope": "python",
+		"prefix": "?ploc",
+		"body": [
+			"with PolarLocations($0):",
+			"    "
+		]
+	},
+	"GridLocations": {
+		"scope": "python",
+		"prefix": "?gloc",
+		"body": [
+			"with GridLocations($0):",
+			"    "
+		]
+	},
+	"AlignCenter": {
+		"scope": "python",
+		"prefix": "?ac",
+		"body": [
+			"align=(Align.${1|CENTER,MIN,MAX|},Align.${2|CENTER,MIN,MAX|})",
+		]
+	},
+	"Extrude": {
+		"scope": "python",
+		"prefix": "?ext",
+		"body": [
+			"extrude(amount=$0)",
+		]
+	},
+	"Offset": {
+		"scope": "python",
+		"prefix": "?off",
+		"body": [
+			"offset(amount=$0)",
+		]
+	},
+	"Split": {
+		"scope": "python",
+		"prefix": "?spl",
+		"body": [
+			"split(bisect_by=Plane.$0)",
+		]
+	},
+	"Mirror": {
+		"scope": "python",
+		"prefix": "?mirr",
+		"body": [
+			"mirror(about=Plane.$0)",
+		]
+	},
+	"PlaneOffset": {
+		"scope": "python",
+		"prefix": "?opl",
+		"body": [
+			"Plane.${1|XY,XZ,YZ|}.offset(${0:0})",
+		]
+	},
+	"RectangleRounded": {
+		"scope": "python",
+		"prefix": "?rrnd",
+		"body": [
+			"RectangleRounded($0)",
+		]
+	},
+	"ModeEnum": {
+		"scope": "python",
+		"prefix": "?mo",
+		"body": [
+			"mode=Mode.${1|SUBTRACT,PRIVATE,INTERSECT,ADD,REPLACE|}",
+		]
+	},
+}
+// "from IPython.core.display import HTML",
+// "HTML(\"<script>Jupyter.notebook.kernel.restart()</script>\")",
