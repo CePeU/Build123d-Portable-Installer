@@ -20,7 +20,7 @@ jobs:
         ls -R
         Remove-Item NSIS_Plugins\Plugin\nsProcess.dll
         Move-Item -Path NSIS_Plugins\Plugin\nsProcessW.dll -Destination NSIS_Plugins\Plugins\amd64-unicode\nsProcess.dll
-        # Move-Item -Path "NSIS_Plugins\Plugin unicode\nsisunz.dll" -Destination NSIS_Plugins\Plugins\amd64-unicode\nsisunz.dll
+        Move-Item -Path "NSIS_Plugins\NSISunzU\Plugin unicode\nsisunz.dll" -Destination NSIS_Plugins\Plugins\amd64-unicode\nsisunz.dll
         Move-Item -Path NSIS_Plugins\_release_unicode\nsis7z.dll -Destination NSIS_Plugins\Plugins\amd64-unicode\nsis7z.dll
     - name: list dirs
       run: |
@@ -31,7 +31,6 @@ jobs:
         arguments: "/V4"
         script-file: "Build123dPortableSetup.nsi"
         additional-plugin-paths: |
-          ${{ github.workspace }}\NSIS_Plugins\Plugin
           ${{ github.workspace }}\NSIS_Plugins\Plugins
 
           
