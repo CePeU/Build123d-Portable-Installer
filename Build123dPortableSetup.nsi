@@ -85,7 +85,7 @@ InstallDir "C:\Portable_Build123d"
 
 # Define the name of the installer
 Name "Portable Build123d"
-OutFile "Build123dInstaller\PortableBuild123dSetup.exe"
+OutFile "PortableBuild123dSetup.exe"
 
 # Request application privileges for Windows Vista and above
 RequestExecutionLevel user
