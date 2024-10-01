@@ -20,7 +20,10 @@ limitations under the License.*/
 # uses Nsisunz plugin for unziping VsCode: https://nsis.sourceforge.io/Nsisunz_plug-in
 # uses nsProcess to check if VSCode is running. This seems to be able to lead to problems: https://nsis.sourceforge.io/NsProcess_plugin
 # Also find the creators of the plugins at above URL's and any legal text
+!verbose 4
+!echo "NSIS ${NSIS_VERSION} (${NSIS_PACKEDVERSION}, CS=${NSIS_CHAR_SIZE}, ${NSIS_CPU})"
 
+Unicode True
 # Define variables
 Var WinpythonURL
 Var VsCodeURL
@@ -82,16 +85,16 @@ InstallDir "C:\Portable_Build123d"
 
 # Define the name of the installer
 Name "Portable Build123d"
-OutFile "F:\Code_Projekts\Build123dInstaller\PortableBuild123dSetup.exe"
+OutFile "PortableBuild123dSetup.exe"
 
 # Request application privileges for Windows Vista and above
 RequestExecutionLevel user
 
 # Definitionvariables
 !define MUI_BGCOLOR "fdc514"
-!define MUI_WELCOMEFINISHPAGE_BITMAP "F:\Code_Projekts\Build123dInstaller\Data\logo.bmp"
-!define MUI_ICON "F:\Code_Projekts\Build123dInstaller\Data\logo.ico"
-!define MUI_HEADERIMAGE_BITMAP "F:\Code_Projekts\Build123dInstaller\Data\logo-banner.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "Data\logo.bmp"
+!define MUI_ICON "Data\logo.ico"
+!define MUI_HEADERIMAGE_BITMAP "Data\logo-banner.bmp"
 !define MUI_PAGE_INSTALLDIRECTORY_VARIABLE $InstallDir
 
 !define MUI_FINISHPAGE_LINK_COLOR "0000FF"
@@ -621,7 +624,7 @@ AddSize 2256000
 
             ${if} $Snippet_Checkbox == 1
                 SetOutPath "$VsCodeINSTDIR\data\user-data\User\snippets"
-                File "F:\Code_Projekts\Build123dInstaller\Data\build123d-OCP.code-snippets"
+                File "build123d-OCP.code-snippets"
             ${EndIf}
 
             ${Else}
