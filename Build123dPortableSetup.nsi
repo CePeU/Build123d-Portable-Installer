@@ -29,38 +29,43 @@ Var VsCodeURL
 Var OCP
 Var VsCodePython
 Var Jupyter
-Var LiveServer
+Var STLviewer
+Var SVGviewer
 Var FrameIndentRainbow
-Var Prettier
+Var BlackFormatter
 
 Var WinpythonURL_Checkbox
 Var VsCodeURL_Checkbox
 Var OCP_Checkbox
 Var VsCodePython_Checkbox
 Var Jupyter_Checkbox
-Var LiveServer_Checkbox
+Var STLviewer_Checkbox
+Var SVGviewer_Checkbox
 Var FrameIndentRainbow_Checkbox
-Var Prettier_Checkbox
+Var BlackFormatter_Checkbox
+
 
 Var Handle_Winpython
-Var Handle_Winpython_Checkbox
 Var Handle_VsCode
-Var Handle_VsCode_Checkbox
 Var Handle_OCP
-Var Handle_OCP_Checkbox
 Var Handle_VsCodePython
-Var Handle_VsCodePython_Checkbox
 Var Handle_Jupyter
-Var Handle_Jupyter_Checkbox
-
-Var Handle_LiveServer
-Var Handle_LiveServer_Checkbox
-
+Var Handle_STLviewer
+Var Handle_SVGviewer
 Var Handle_FrameIndentRainbow
-Var Handle_FrameIndentRainbow_Checkbox
+Var Handle_BlackFormatter
 
-Var Handle_Prettier
-Var Handle_Prettier_Checkbox
+
+Var Handle_Winpython_Checkbox
+Var Handle_VsCode_Checkbox
+Var Handle_OCP_Checkbox
+Var Handle_VsCodePython_Checkbox
+Var Handle_Jupyter_Checkbox
+Var Handle_STLviewer_Checkbox
+Var Handle_SVGviewer_Checkbox
+Var Handle_FrameIndentRainbow_Checkbox
+Var Handle_BlackFormatter_Checkbox
+
 
 Var PyPath
 
@@ -134,7 +139,11 @@ Var FossilURL
 # https://nsis.sourceforge.io/Docs/nsDialogs/Readme.html
 Function DownloadURLPage
     StrCpy $Python_DownloadLink "https://github.com/winpython/winpython/releases/download/8.2.20240618final/Winpython64-3.12.4.1dot.exe"
+    
+    # Visual Studio Updates page also for older revisions: https://code.visualstudio.com/updates/
+    # Visual Studio Code zip page: https://code.visualstudio.com/docs/?dv=winzip
     StrCpy $VSC_DownloadLink "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-archive"
+
     StrCpy $Git_DownloadLink "https://github.com/git-for-windows/git/releases/download/v2.46.1.windows.1/PortableGit-2.46.1-64-bit.7z.exe"
     StrCpy $Fossil_DownloadLink "https://www.fossil-scm.org/home/uv/fossil-w64-2.24.zip"
 
@@ -172,13 +181,13 @@ Function DownloadURLPage
     Pop $Handle_VsCode
     # The handel ID ist retrieved with Pop from the stack, this time to DownloadPath variable
 
-    ${NSD_CreateCheckBox} 0 55u 100% 12u "Install Portable Git (x64): Change URL below for a different version."
+    ${NSD_CreateCheckBox} 0 55u 100% 12u "Install Portable Git (x64) version control system: Change URL below for a different version."
     Pop $Handle_Git_Checkbox
     ;${NSD_Check} $Handle_Git_Checkbox
     ${NSD_CreateText} 0 68u 100% 12u "$Git_DownloadLink"
     Pop $Handle_Git
 
-    ${NSD_CreateCheckBox} 0 84u 100% 12u "Install Fossil (x64): Change URL below for a different version."
+    ${NSD_CreateCheckBox} 0 84u 100% 12u "Install Fossil (x64) version control system: Change URL below for a different version."
     Pop $Handle_Fossil_Checkbox
     ;${NSD_Check} $Handle_Fossil_Checkbox
     ${NSD_CreateText} 0 97u 100% 12u "$Fossil_DownloadLink"
@@ -235,16 +244,22 @@ Function ExtensionsPage
     ${NSD_CreateText} 74% 26u 26% 12u "ms-toolsai.jupyter"
     Pop $Handle_Jupyter
 
-    ${NSD_CreateCheckBox} 0 52u 23% 12u "Prettier:"
-    Pop $Handle_Prettier_Checkbox
-    ${NSD_CreateText} 23% 52u 35% 12u "esbenp.prettier-vscode"
-    Pop $Handle_Prettier
+    ${NSD_CreateCheckBox} 0 52u 23% 12u "BlackFormatter:"
+    Pop $Handle_BlackFormatter_Checkbox
+    ${NSD_CreateText} 23% 52u 35% 12u "ms-python.black-formatter"
+    Pop $Handle_BlackFormatter
 
-    ${NSD_CreateCheckBox} 0 78u 23% 12u "Live Server:"
-    Pop $Handle_LiveServer_Checkbox
-    ${NSD_CreateText} 23% 78u 35% 12u "ritwickdey.LiveServer"
-    Pop $Handle_LiveServer
-    ;allow for Fossil extension - currently coupled on Fossil download and install
+    ${NSD_CreateCheckBox} 0 78u 23% 12u "STL Viewer:"
+    Pop $Handle_STLviewer_Checkbox
+    ${NSD_CreateText} 23% 78u 35% 12u "mtsmfm.vscode-stl-viewer"
+    Pop $Handle_STLviewer
+    
+    ${NSD_CreateCheckBox} 0 104u 23% 12u "SVG preview:"
+    Pop $Handle_SVGviewer_Checkbox
+    ${NSD_CreateText} 23% 104u 35% 12u "simonsiefke.svg-preview"
+    Pop $Handle_SVGviewer
+
+
     nsDialogs::Show
 FunctionEnd
 
@@ -254,17 +269,18 @@ Function ExtensionsPageLeave
     
     ${NSD_GetState} $Handle_Jupyter_Checkbox $Jupyter_Checkbox
     ${NSD_GetState} $Handle_FrameIndentRainbow_Checkbox $FrameIndentRainbow_Checkbox
-    ${NSD_GetState} $Handle_Prettier_Checkbox $Prettier_Checkbox
-    ${NSD_GetState} $Handle_LiveServer_Checkbox $LiveServer_Checkbox
+    ${NSD_GetState} $Handle_BlackFormatter_Checkbox $BlackFormatter_Checkbox
+    ${NSD_GetState} $Handle_STLviewer_Checkbox $STLviewer_Checkbox
+    ${NSD_GetState} $Handle_SVGviewer_Checkbox $SVGviewer_Checkbox
 
     ${NSD_GetText} $Handle_OCP $OCP
     ${NSD_GetText} $Handle_VsCodePython $VsCodePython
     
     ${NSD_GetText} $Handle_Jupyter $Jupyter
     ${NSD_GetText} $Handle_FrameIndentRainbow $FrameIndentRainbow
-    ${NSD_GetText} $Handle_Prettier $Prettier
-    ${NSD_GetText} $Handle_LiveServer $LiveServer
-
+    ${NSD_GetText} $Handle_BlackFormatter $BlackFormatter
+    ${NSD_GetText} $Handle_STLviewer $STLviewer
+    ${NSD_GetText} $Handle_SVGviewer $SVGviewer
 FunctionEnd
 
 
@@ -402,15 +418,24 @@ AddSize 2256000
         inetc::get "$VsCodeURL" "$INSTDIR\Downloads\VsCode.zip" /END
         Pop $0
         ${If} $0 == "OK"
-        
+            ClearErrors
+            ;StrCpy $3 "$VsCodeINSTDIR"
+            ;SetOutPath $3
+            ;MessageBox MB_OK  "This is the Output path $VsCodeINSTDIR"
+            ;MessageBox MB_OK  "This is the Input path $INSTDIR"
+            ;Nsis7z::ExtractWithDetails "$INSTDIR\Downloads\VsCode.zip" "Installing VsCode %s..."
             nsisunz::UnzipToStack "$INSTDIR\Downloads\VsCode.zip" "$VsCodeINSTDIR"
             Pop $0
-        
+            ${If} ${Errors}
+                MessageBox MB_OK  "Could not unzip VsCode"
+                Abort
+            ${EndIf}
             ClearErrors
             DetailPrint "Creating necessary data directory to make VsCode portable"
             CreateDirectory "$VsCodeINSTDIR\data\user-data\User"
-            Sleep 4000
+            CreateDirectory "$VsCodeINSTDIR\data\tmp"
             Pop $0
+            Sleep 4000
             ${If} ${Errors}
                 MessageBox MB_OK "Failed to create directory"
                 Abort
@@ -592,18 +617,24 @@ AddSize 2256000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $FrameIndentRainbow"'
             ${EndIf}
 
-            ${if} $LiveServer_Checkbox == 1
-                DetailPrint "Installing VsCode extension $LiveServer"
+            ${if} $STLviewer_Checkbox == 1
+                DetailPrint "Installing VsCode extension $STLviewer"
                 Sleep 4000
-                nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $LiveServer"'
+                nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $STLviewer"'
             ${EndIf}
 
-            ${if} $Prettier_Checkbox == 1
-                DetailPrint "Installing VsCode extension $Prettier"
+            ${if} $BlackFormatter_Checkbox == 1
+                DetailPrint "Installing VsCode extension $BlackFormatter"
                 Sleep 4000
-                nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $Prettier"'
+                nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $BlackFormatter"'
             ${EndIf}
         
+            ${if} $SVGviewer_Checkbox == 1
+                DetailPrint "Installing VsCode extension $SVGviewer"
+                Sleep 4000
+                nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $SVGviewer"'
+            ${EndIf}
+
             ${if} $Fossil_Checkbox == 1
                 DetailPrint "Installing VsCode extension for Fossil"
                 Sleep 4000
