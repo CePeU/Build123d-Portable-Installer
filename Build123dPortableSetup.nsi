@@ -84,14 +84,18 @@ Var VsCodeINSTDIR
 # Default installation directory (NSIS specific predefined variable)
 # No satisfactory default path was found yet. ProgramFiles is not advised for windows.
 # The Home directory path is so deeply stacked that nobody will find the files again.
-;InstallDir "$ProgramFiles\Portable_Build123d"
-InstallDir "C:\Portable_Build123d"
+# https://nsis.sourceforge.io/Docs/Chapter4.html#varconstant 4.2.3
+InstallDir "$Profile\Portable_Build123d"
+;InstallDir "$ProgramFiles64\Portable_Build123d"
+;InstallDir "C:\Portable_Build123d"
 
 # Define the name of the installer
 Name "Portable Build123d"
-OutFile "PortableBuild123dSetup.exe"
+OutFile "${NSISDIR}\PortableBuild123dSetup.exe"
 
 # Request application privileges for Windows Vista and above
+# https://nsis.sourceforge.io/Reference/RequestExecutionLevel#:~:text=Specifies%20the%20requested%20execution%20level%20for
+# none|user|highest|admin
 RequestExecutionLevel user
 
 # Definitionvariables
@@ -138,12 +142,17 @@ Var FossilURL
 # Custom page for download path input
 # https://nsis.sourceforge.io/Docs/nsDialogs/Readme.html
 Function DownloadURLPage
+
+    # WinPython download path
     StrCpy $Python_DownloadLink "https://github.com/winpython/winpython/releases/download/8.2.20240618final/Winpython64-3.12.4.1dot.exe"
     
+    # Visual Studio Code ZIP page: https://code.visualstudio.com/docs/?dv=winzip
     # Visual Studio Updates page also for older revisions: https://code.visualstudio.com/updates/
-    # Visual Studio Code zip page: https://code.visualstudio.com/docs/?dv=winzip
+    # Visual studio code ZIP page to download a SPECIFIC version: https://update.code.visualstudio.com/1.94.0/win32-x64-archive/stable
+    # ZIP files are found under: win32-x64-archive and EXE files are found under: win32-x64-user
     StrCpy $VSC_DownloadLink "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-archive"
 
+    # Two possible version control systems
     StrCpy $Git_DownloadLink "https://github.com/git-for-windows/git/releases/download/v2.46.1.windows.1/PortableGit-2.46.1-64-bit.7z.exe"
     StrCpy $Fossil_DownloadLink "https://www.fossil-scm.org/home/uv/fossil-w64-2.24.zip"
 
@@ -181,7 +190,7 @@ Function DownloadURLPage
     Pop $Handle_VsCode
     # The handel ID ist retrieved with Pop from the stack, this time to DownloadPath variable
 
-    ${NSD_CreateCheckBox} 0 55u 100% 12u "Install Portable Git (x64) version control system: Change URL below for a different version."
+    ${NSD_CreateCheckBox} 0 55u 100% 12u "Install Portable Git (x64): Change URL below for a different version."
     Pop $Handle_Git_Checkbox
     ;${NSD_Check} $Handle_Git_Checkbox
     ${NSD_CreateText} 0 68u 100% 12u "$Git_DownloadLink"
@@ -419,11 +428,6 @@ AddSize 2256000
         Pop $0
         ${If} $0 == "OK"
             ClearErrors
-            ;StrCpy $3 "$VsCodeINSTDIR"
-            ;SetOutPath $3
-            ;MessageBox MB_OK  "This is the Output path $VsCodeINSTDIR"
-            ;MessageBox MB_OK  "This is the Input path $INSTDIR"
-            ;Nsis7z::ExtractWithDetails "$INSTDIR\Downloads\VsCode.zip" "Installing VsCode %s..."
             nsisunz::UnzipToStack "$INSTDIR\Downloads\VsCode.zip" "$VsCodeINSTDIR"
             Pop $0
             ${If} ${Errors}
@@ -462,9 +466,13 @@ AddSize 2256000
                         DetailPrint "Fossil directory was created"
                         Sleep 4000
                     ${EndIf}
-                    
+                    ClearErrors
                     nsisunz::UnzipToStack "$INSTDIR\Downloads\Fossil.zip" "$VsCodeINSTDIR\data\Fossil"
                     Pop $0
+                    ${If} ${Errors}
+                        MessageBox MB_OK  "Could not unzip Fossil source control"
+                        Abort
+                    ${EndIf}
                     ${Else}
                     MessageBox MB_OK "Fossil Download failed: $0"
                 ${EndIf}
@@ -490,9 +498,14 @@ AddSize 2256000
                         ${EndIf}
                         StrCpy $3 "$VsCodeINSTDIR\data\GitPortable\"
                         SetOutPath $3
+                        ClearErrors
                         Nsis7z::ExtractWithDetails "$INSTDIR\Downloads\Git.zip" "Installing Git Portable %s..."
                         ;nsisunz::UnzipToStack "$INSTDIR\Downloads\Git.zip" "$VsCodeINSTDIR\data\GitPortable"
-                        Pop $0
+                        Pop $0                        
+                        ${If} ${Errors}
+                            MessageBox MB_OK  "Could not unzip Git source control"
+                            Abort
+                        ${EndIf}
                     ${Else}
                         MessageBox MB_OK "Git portable Download failed: $0"
                 ${EndIf}
