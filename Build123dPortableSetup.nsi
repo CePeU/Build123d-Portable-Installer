@@ -97,7 +97,7 @@ OutFile "PortableBuild123dSetup.exe"
 # Request application privileges for Windows Vista and above
 # https://nsis.sourceforge.io/Reference/RequestExecutionLevel#:~:text=Specifies%20the%20requested%20execution%20level%20for
 # none|user|highest|admin
-RequestExecutionLevel admin
+RequestExecutionLevel user
 
 # Definitionvariables
 !define MUI_BGCOLOR "fdc514"
