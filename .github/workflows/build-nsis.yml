@@ -37,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: PortableBuild123dSetup.exe
-        path: ${{ github.workspace }}\PortableBuild123dSetup.exe
+        path: PortableBuild123dSetup.exe
           
         # ${{ github.workspace }}\NSIS_Plugins\_release_unicode
         # NsProcess\Plugin\
