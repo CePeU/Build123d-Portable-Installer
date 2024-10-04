@@ -91,7 +91,8 @@ InstallDir "$Profile\Portable_Build123d"
 
 # Define the name of the installer
 Name "Portable Build123d"
-OutFile "${NSISDIR}\PortableBuild123dSetup.exe"
+;OutFile "${NSISDIR}\PortableBuild123dSetup.exe"
+OutFile "PortableBuild123dSetup.exe"
 
 # Request application privileges for Windows Vista and above
 # https://nsis.sourceforge.io/Reference/RequestExecutionLevel#:~:text=Specifies%20the%20requested%20execution%20level%20for
