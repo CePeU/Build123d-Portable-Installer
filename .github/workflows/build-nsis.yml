@@ -29,11 +29,13 @@ jobs:
         script-file: "Build123dPortableSetup.nsi"
         additional-plugin-paths: |
           ${{ github.workspace }}\NSIS_Plugins\Plugins
+          
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: PortableBuild123dSetup.exe
         path: PortableBuild123dSetup.exe
+        
 
-  # TODO: publishing        
+  # TODO: publishing
   # publish-nsis:
