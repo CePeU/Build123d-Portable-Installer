@@ -28,7 +28,7 @@ jobs:
       with:
         arguments: "/V4"
         script-file: "Build123dPortableSetup.nsi"
-        additional-plugin-paths: "${{ github.workspace }}\NSIS_Plugins\Plugins"
+        additional-plugin-paths: ${{ github.workspace }}\NSIS_Plugins\Plugins
           
     - name: Upload artifact
       uses: actions/upload-artifact@v4
