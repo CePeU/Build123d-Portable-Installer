@@ -18,7 +18,8 @@ jobs:
         7z x -o"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.zip"
         7z x -o"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.7z"
         ls -R
-        Move-Item -Path "NSIS_Plugins\NSISunzU\Plugin unicode\nsisunz.dll" -Destination NSIS_Plugins\Plugins\x86-unicode\nsisunz.dll
+        Move-Item -Path "NSIS_Plugins\NSISunzU\Plugin unicode\nsisunz.dll" -Destination "NSIS_Plugins\Plugins\x86-unicode\nsisunz.dll"
+        
     - name: list dirs
       run: |
         ls -R
@@ -27,8 +28,7 @@ jobs:
       with:
         arguments: "/V4"
         script-file: "Build123dPortableSetup.nsi"
-        additional-plugin-paths: |
-          ${{ github.workspace }}\NSIS_Plugins\Plugins
+        additional-plugin-paths: "${{ github.workspace }}\NSIS_Plugins\Plugins"
           
     - name: Upload artifact
       uses: actions/upload-artifact@v4
