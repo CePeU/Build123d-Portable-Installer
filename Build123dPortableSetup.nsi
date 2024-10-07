@@ -418,7 +418,7 @@ AddSize 2256000
 
     # Create path if only VScode is to be installed
     ${If} $WinpythonURL_Checkbox == 1
-            StrCpy $VsCodeINSTDIR "$INSTDIR\$PyPath\t"
+            StrCpy $VsCodeINSTDIR "$INSTDIR\$PyPath\t\vscode"
         ${Else}
             StrCpy $VsCodeINSTDIR "$INSTDIR"
     ${EndIf}
