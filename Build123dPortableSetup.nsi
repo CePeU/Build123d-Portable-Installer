@@ -17,7 +17,7 @@ limitations under the License.*/
 # uses 7zip plugin: https://nsis.sourceforge.io/Nsis7z_plug-in
 # uses inetc download plugin (https download ability): https://nsis.sourceforge.io/Inetc_plug-in
 # uses Nsisunz plugin for unziping VsCode: https://nsis.sourceforge.io/Nsisunz_plug-in
-# previously used nsProcess to check if VSCode is running. This seems to be able to lead to problems: https://nsis.sourceforge.io/NsProcess_plugin
+# previously used nsProcess to check if VSCode is running https://nsis.sourceforge.io/NsProcess_plugin
 # Also find the creators of the plugins at above URL's and any legal text
 !verbose 4
 !echo "NSIS ${NSIS_VERSION} (${NSIS_PACKEDVERSION}, CS=${NSIS_CHAR_SIZE}, ${NSIS_CPU})"
