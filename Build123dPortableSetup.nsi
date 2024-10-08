@@ -17,7 +17,7 @@ limitations under the License.*/
 # uses 7zip plugin: https://nsis.sourceforge.io/Nsis7z_plug-in
 # uses inetc download plugin (https download ability): https://nsis.sourceforge.io/Inetc_plug-in
 # uses Nsisunz plugin for unziping VsCode: https://nsis.sourceforge.io/Nsisunz_plug-in
-# uses nsProcess to check if VSCode is running. This seems to be able to lead to problems: https://nsis.sourceforge.io/NsProcess_plugin
+# previously used nsProcess to check if VSCode is running https://nsis.sourceforge.io/NsProcess_plugin
 # Also find the creators of the plugins at above URL's and any legal text
 !verbose 4
 !echo "NSIS ${NSIS_VERSION} (${NSIS_PACKEDVERSION}, CS=${NSIS_CHAR_SIZE}, ${NSIS_CPU})"
@@ -159,15 +159,18 @@ Function DownloadURLPage
 
     !insertmacro MUI_HEADER_TEXT "Choose download versions of components" "Choose the URLs (and versions) for Winpython and VsCode."
 
-    StrCpy $1 "Code.exe"
-    nsProcess::_FindProcess "$1"
-    Pop $R0
+    ###############
+    # DISABLED: check for currently running Code.exe
+    # StrCpy $1 "Code.exe"
+    # nsProcess::_FindProcess "$1"
+    # Pop $R0
 
-    ${If} $R0 = 0
-        MessageBox MB_OK "Please close your Visual Studio Code program (Code.exe) and RESTART the installer or the extension install might FAIL!"
-        Pop $R0
-        Sleep 500
-    ${EndIf}
+    # ${If} $R0 = 0
+    #     MessageBox MB_OK "Please close your Visual Studio Code program (Code.exe) and RESTART the installer or the extension install might FAIL!"
+    #     Pop $R0
+    #     Sleep 500
+    # ${EndIf}
+    ###############
 
     nsDialogs::Create 1018
     # The Windows Handle is put on the stack
