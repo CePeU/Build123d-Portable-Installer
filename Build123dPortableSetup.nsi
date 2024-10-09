@@ -254,6 +254,7 @@ Function ExtensionsPage
     
     ${NSD_CreateCheckBox} 60% 26u 14% 12u "Jupyter:"
     Pop $Handle_Jupyter_Checkbox
+    ${NSD_Check} $Handle_Jupyter_Checkbox
     ${NSD_CreateText} 74% 26u 26% 12u "ms-toolsai.jupyter"
     Pop $Handle_Jupyter
 
@@ -406,10 +407,10 @@ AddSize 2256000
             FileSeek $R1 0 END
             FileWrite $R1 '$\r$\nPATH=%PATH%'
             ${if} $Git_Checkbox == 1
-                FileWrite $R1 ";$INSTDIR\$PyPath\t\data\GitPortable\bin"
+                FileWrite $R1 ";$INSTDIR\$PyPath\t\vscode\data\GitPortable\bin"
             ${EndIf}
             ${if} $Fossil_Checkbox == 1
-                FileWrite $R1 ";$INSTDIR\$PyPath\t\data\Fossil"            
+                FileWrite $R1 ";$INSTDIR\$PyPath\t\vscode\data\Fossil"            
             ${EndIf}
             FileWrite $R1 '$\r$\n'
             FileClose $R1
@@ -559,14 +560,14 @@ AddSize 2256000
                 FileWrite $R1 "echo PATH=%%PATH%%"
                 ${if} $Git_Checkbox == 1
                     ${if} $WinpythonURL_Checkbox == 1
-                            FileWrite $R1 ";%drivepath%\t\data\GitPortable\bin"
+                            FileWrite $R1 ";%drivepath%\t\vscode\data\GitPortable\bin"
                         ${Else}
                             FileWrite $R1 ";%drivepath%\data\GitPortable\bin"   
                     ${EndIf}
                 ${EndIf}
                 ${if} $Fossil_Checkbox == 1
                     ${if} $WinpythonURL_Checkbox == 1
-                            FileWrite $R1 ";%drivepath%\t\data\Fossil"
+                            FileWrite $R1 ";%drivepath%\t\vscode\data\Fossil"
                         ${Else}
                             FileWrite $R1 ";%drivepath%\data\Fossil\"   
                     ${EndIf}
