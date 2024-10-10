@@ -15,7 +15,7 @@ For this reason you also can uncheck the python part and use the installer as
 a setup for a portable Visual Studio Code setup (In that case use VsCode.cmd to start you VsCode session).
 
 After the installation you can start VsCode under this path:<br>
-<b>[Installdirectory]\\[PythonVersionPath]\t\Vs Code.exe</b>
+<b>[Installdirectory]\\[PythonVersionPath]\Vs Code.exe</b>
 
 The downloaded files can be found under:<br>
 <b>[Installdirectory]\\Downloads</b>
@@ -73,11 +73,11 @@ You might change the setup but be aware that it's up to you to test if the new s
 To make Visual Studio Code portable a data directory is added (including subdirectories to hold a potential settings.json)
 You can find the directory at:
 
-<b>[Installdirectory]\\[PythonVersionPath]\t\data</b>
+<b>[Installdirectory]\\[PythonVersionPath]\t\vscode\data</b>
 
 Additional subdirectories are at:
 
-<b>[Installdirectory]\\[PythonVersionPath]\t\data\user-data\User</b>
+<b>[Installdirectory]\\[PythonVersionPath]\t\vscode\data\user-data\User</b>
 
 WinPython is modified to hold the PATH so Visual Studio finds the python interpreter.
 You can find the file at:
