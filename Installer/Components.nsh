@@ -59,7 +59,7 @@ SectionEnd
 !insertmacro ExtensionSection "$(ComponentSvg)" SecSVG SVGviewer "" 10000
 SectionGroupEnd
 
-SectionGroup "$(GroupVersionControl)" GroupVersionControl
+SectionGroup /e "$(GroupVersionControl)" GroupVersionControl
 Section /o "Portable Git (x64)" SecGit
     AddSize 400000
     Call InstallGit
@@ -72,7 +72,7 @@ Section /o "$(ComponentFossil)" SecFossil
 SectionEnd
 SectionGroupEnd
 
-SectionGroup "$(GroupHelpers)" GroupHelpers
+SectionGroup /e "$(GroupHelpers)" GroupHelpers
 Section /o "$(ComponentLaunchers)" SecLaunchers
     AddSize 1
     Call CreateThumbdriveScript

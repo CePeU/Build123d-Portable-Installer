@@ -33,6 +33,22 @@ components run. Cleanup runs after successful installation.
 
 ## Source layout and validation
 
+Run **Actions → build-nsis → Run workflow** to build an installer and create a
+draft release containing `PortableBuild123dSetup.exe`. Pushing a `v*` tag also
+creates a draft release for that tag. Manual builds use `build-<run-id>` as the
+release tag; rerunning a build replaces the asset only while its release remains
+a draft. Pull requests produce Actions artifacts only. Review and publish drafts
+from the repository's Releases page when ready.
+
+The native wizard is enlarged by 40% in both dimensions to give the components
+tree more room. `tools/enlarge_ui.py` generates its dialog resources from the
+installed NSIS UI during compilation; building requires Python 3 on Windows.
+The component tree and preset selector have twice their enlarged width.
+The component description spans the page above the installation-type selector.
+The wizard has an additional 20% height assigned to the component tree, plus
+another approximately 5% of tree height (`TREE_EXTRA_HEIGHT` in the generator).
+All component groups are expanded initially.
+
 `Build123dPortableSetup.nsi` declares the wizard and assembles these modules:
 
 | File | Responsibility |

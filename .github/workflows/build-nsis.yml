@@ -1,6 +1,14 @@
 name: build-nsis
 
-on: [pull_request, workflow_dispatch]
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
 
 jobs:
   build-nsis-exe:
@@ -49,3 +57,32 @@ jobs:
         with:
           name: PortableBuild123dSetup.exe
           path: PortableBuild123dSetup.exe
+          if-no-files-found: error
+
+  draft-release:
+    if: github.event_name != 'pull_request'
+    needs: build-nsis-exe
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: PortableBuild123dSetup.exe
+      - name: Create draft release with installer
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || format('build-{0}', github.run_id) }}
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: |
+          gh release view $env:RELEASE_TAG --json isDraft > release.json
+          if ($LASTEXITCODE -eq 0) {
+            $release = Get-Content release.json -Raw | ConvertFrom-Json
+            if (-not $release.isDraft) { throw 'Refusing to replace assets in a published release' }
+            gh release upload $env:RELEASE_TAG PortableBuild123dSetup.exe --clobber
+          } else {
+            gh release create $env:RELEASE_TAG PortableBuild123dSetup.exe --draft --target $env:RELEASE_COMMIT --title "Portable Build123d $env:RELEASE_TAG" --notes "Portable Build123d Windows installer."
+          }
+          if ($LASTEXITCODE -ne 0) { throw 'Could not upload installer to draft release' }

@@ -1,4 +1,4 @@
-﻿/*Copyright 2024 CePeU
+/*Copyright 2024 CePeU
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@ InstallDir "$PROFILE\Portable_Build123d"
 RequestExecutionLevel user
 
 !define MUI_BGCOLOR "fdc514"
+# Enlarge the native wizard and every built-in page, including the components tree.
+!system 'python "tools\enlarge_ui.py" "${NSISDIR}\Contrib\UIs\modern.exe" ".build-tools\modern-large.exe"' = 0
+!define MUI_UI ".build-tools\modern-large.exe"
 !define MUI_WELCOMEFINISHPAGE_BITMAP "Data\logo.bmp"
 !define MUI_ICON "Data\logo.ico"
 !define MUI_HEADERIMAGE_BITMAP "Data\logo-banner.bmp"
