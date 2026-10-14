@@ -1,41 +1,51 @@
 name: build-nsis
 
-# on: [push, pull_request, workflow_dispatch]
-on: [workflow_dispatch]
+on: [pull_request, workflow_dispatch]
 
 jobs:
-
   build-nsis-exe:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Install deps
-      run: |
-        choco install 7zip curl
-        curl -O https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip
-        curl -O https://nsis.sourceforge.io/mediawiki/images/5/5a/NSISunzU.zip
-        curl -O https://nsis.sourceforge.io/mediawiki/images/6/69/Nsis7z_19.00.7z
-        7z x -o"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.zip"
-        7z x -o"${{ github.workspace }}\NSIS_Plugins" "${{ github.workspace }}\*.7z"
-        ls -R
-        Move-Item -Path "NSIS_Plugins\NSISunzU\Plugin unicode\nsisunz.dll" -Destination "NSIS_Plugins\Plugins\x86-unicode\nsisunz.dll"
-        
-    - name: list dirs
-      run: |
-        ls -R
-    - name: Create installer
-      uses: joncloud/makensis-action@v4.1
-      with:
-        arguments: "/V4"
-        script-file: "Build123dPortableSetup.nsi"
-        additional-plugin-paths: ${{ github.workspace }}\NSIS_Plugins\Plugins
-          
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: PortableBuild123dSetup.exe
-        path: PortableBuild123dSetup.exe
-        
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-  # TODO: publishing
-  # publish-nsis:
+      - name: Install NSIS and plugins
+        shell: pwsh
+        run: |
+          choco install nsis 7zip -y --no-progress
+          if ($LASTEXITCODE -ne 0) { throw 'Could not install build tools' }
+          New-Item -ItemType Directory -Force .build-tools | Out-Null
+          Invoke-WebRequest 'https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip' -OutFile '.build-tools/Inetc.zip'
+          Invoke-WebRequest 'https://nsis.sourceforge.io/mediawiki/images/5/5a/NSISunzU.zip' -OutFile '.build-tools/NSISunzU.zip'
+          Invoke-WebRequest 'https://nsis.sourceforge.io/mediawiki/images/6/69/Nsis7z_19.00.7z' -OutFile '.build-tools/Nsis7z.7z'
+          Expand-Archive -LiteralPath '.build-tools/Inetc.zip' -DestinationPath '.build-tools/inetc'
+          Expand-Archive -LiteralPath '.build-tools/NSISunzU.zip' -DestinationPath '.build-tools/nsisunz'
+          & "$env:ProgramFiles\7-Zip\7z.exe" x '-o.build-tools' '.build-tools/Nsis7z.7z'
+          if ($LASTEXITCODE -ne 0) { throw 'Could not extract Nsis7z' }
+          $nsisRoot = Join-Path ${env:ProgramFiles(x86)} 'NSIS'
+          $pluginDestination = Join-Path $nsisRoot 'Plugins\x86-unicode'
+          Copy-Item -LiteralPath '.build-tools/inetc/Plugins/x86-unicode/INetC.dll' -Destination $pluginDestination
+          Copy-Item -LiteralPath '.build-tools/nsisunz/NSISunzU/Plugin unicode/nsisunz.dll' -Destination $pluginDestination
+          Copy-Item -LiteralPath '.build-tools/Plugins/x86-unicode/nsis7z.dll' -Destination $pluginDestination
+
+      - name: Check components and portable launchers
+        shell: pwsh
+        run: |
+          $compiler = Join-Path ${env:ProgramFiles(x86)} 'NSIS\makensis.exe'
+          python tests/run_checks.py $compiler
+          if ($LASTEXITCODE -ne 0) { throw 'Installer checks failed' }
+
+      - name: Create installer
+        shell: pwsh
+        run: |
+          $compiler = Join-Path ${env:ProgramFiles(x86)} 'NSIS\makensis.exe'
+          & $compiler /V3 Build123dPortableSetup.nsi
+          if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: PortableBuild123dSetup.exe
+          path: PortableBuild123dSetup.exe

@@ -1,5 +1,64 @@
 # Build123d-Portable-Installer
 
+## Component setup
+
+The installer uses a native NSIS components tree with descriptions and three choices:
+
+- **Build123d (recommended):** WinPython, Build123d and its required Python
+  packages, portable VS Code, Python extension, OCP CAD Viewer, and Jupyter.
+- **Portable VS Code:** the editor without Python or extensions.
+- **Custom:** select individual components, including Cadquery, additional
+  extensions, Portable Git, Fossil, USB helpers, and code snippets.
+
+Required components are selected automatically and locked while a selected
+component needs them. OCP CAD Viewer requires the Build123d packages, WinPython,
+the Python extension, and VS Code. Cadquery and Build123d packages require
+WinPython. Extensions, version control integration, and portable helpers require
+VS Code. Deselect dependents first to unlock their prerequisites. At least
+WinPython or VS Code must be selected.
+
+After choosing components and a destination, the Options page provides a desktop
+shortcut, workspace preferences, download cleanup (enabled by default), and an
+advanced settings checkbox. Workspace preferences enable automatic opening of
+untrusted files and editor line highlighting; existing `settings.json` files are
+preserved. Advanced settings let you change download URLs and extension
+Marketplace IDs for selected components. Edits and options survive Back/Next
+navigation. Close running VS Code windows before installing extensions.
+
+Component disk requirements include estimated download/extraction headroom.
+Actual requirements vary with the versions selected in advanced settings.
+Use separate installation directories for different WinPython versions.
+Downloads, extraction, pip, and extension failures stop installation before later
+components run. Cleanup runs after successful installation.
+
+## Source layout and validation
+
+`Build123dPortableSetup.nsi` declares the wizard and assembles these modules:
+
+| File | Responsibility |
+| --- | --- |
+| `Installer/Components.nsh` | Ordered installation sections, groups, presets, size estimates, descriptions |
+| `Installer/Selection.nsh` | Dependencies, prerequisite locks, preset application, selection validation |
+| `Installer/Pages.nsh` | Options and advanced settings pages |
+| `Installer/Operations.nsh` | Downloads, extraction, packages, extensions, launchers, finalization |
+| `Installer/Defaults.nsh` | Initial URLs, Marketplace IDs, and options |
+| `Installer/Variables.nsh` | Shared runtime variables |
+| `Languages/*.nsh` | Translated labels, descriptions, and messages |
+
+Build with Unicode NSIS and the inetc, Nsis7z, and nsisunz x86-unicode plugins,
+as configured in `.github/workflows/build-nsis.yml`. The workflow also runs:
+
+```powershell
+python tests/run_checks.py "C:\Program Files (x86)\NSIS\makensis.exe"
+```
+
+The checks execute the real NSIS selection code, validate both translations,
+generate and relocate launchers to paths with spaces, and run pip/extension
+commands against local mocks. They preserve existing settings and check cleanup.
+They download no application packages. Artifacts are written to `.build-tools/`.
+Full downloads and actual third-party installations still require a Windows
+installation smoke test.
+
 ## Installer languages
 
 The installer supports English and German. A language picker appears before the
@@ -31,14 +90,20 @@ install it. During the setup some files are modified  to allow for a fully porta
 
 Fully portable means that you can install and delete the software setup without any registry changes or
 other dependencies. You can copy the installation to any hard drive you like. You also can use it on your 
-USB thumb drive - just copy your installation there. 
-Install it with the thumbdrive option and execute ThumbdriveAdjust.cmd after the copy operation and you are
-ready to go. 
+USB thumb drive - just copy your installation there.
+The generated `VsCode.cmd` launcher uses paths relative to its own directory,
+so moving the installation does not require rewriting paths. The optional
+`ThumbdriveAdjust.cmd` helper starts that launcher from the environment root.
 For this reason you also can uncheck the python part and use the installer as
 a setup for a portable Visual Studio Code setup (In that case use VsCode.cmd to start you VsCode session).
 
-After the installation you can start VsCode under this path:<br>
-<b>[Installdirectory]\\[PythonVersionPath]\Vs Code.exe</b>
+After installation, start VS Code using `VsCode.cmd`:
+
+- With WinPython: `[Installdirectory]\[PythonVersionPath]\t\vscode\VsCode.cmd`
+- Editor only: `[Installdirectory]\VsCode.cmd`
+
+The launcher loads the WinPython environment when installed and adds selected
+Git/Fossil tools to the session PATH. No machine-wide PATH changes are made.
 
 The downloaded files can be found under:<br>
 <b>[Installdirectory]\\Downloads</b>
@@ -88,7 +153,7 @@ Also several additional and necessary python packages are installed using pip.
 These packages are listed on Bernhard Walters OCP Cad Viewer github website.
 
 As of now these additional python packages are:
-OCP build123d ipykernel ocp_tessellate ocp_vscode
+cadquery-ocp build123d ipykernel ocp_tessellate ocp_vscode
 
 The installer has a predefined set of python versions, python packages and Visual Studio Code extensions known to work together.
 You might change the setup but be aware that it's up to you to test if the new setup will work.
@@ -102,9 +167,7 @@ Additional subdirectories are at:
 
 <b>[Installdirectory]\\[PythonVersionPath]\t\vscode\data\user-data\User</b>
 
-WinPython is modified to hold the PATH so Visual Studio finds the python interpreter.
-You can find the file at:
-
-<b>[Installdirectory]\\[PythonVersionPath]\settings\winpython.ini</b>
+The generated launcher calls WinPython's `scripts\env_for_icons.bat` so VS Code
+finds the Python interpreter. It leaves `settings\winpython.ini` unchanged.
 
 No additional changes are made unless you enable them to be made (like the desktop link, changes to the workspace json etc.).
