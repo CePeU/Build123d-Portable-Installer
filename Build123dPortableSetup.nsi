@@ -109,9 +109,9 @@ RequestExecutionLevel user
 !define MUI_FINISHPAGE_LINK_COLOR "0000FF"
 !define MUI_FINISHPAGE_LINK "Build123d: https://build123d.readthedocs.io/"
 !define MUI_FINISHPAGE_LINK_LOCATION https://build123d.readthedocs.io/en/latest/index.html
-!define MUI_FINISHPAGE_TEXT "Portable Build123d has been installed on your computer.$\r$\nClick Finish to close Setup.$\r$\n$\r$\nIMPORTANT! Use the weblink for latest Information!."
+!define MUI_FINISHPAGE_TEXT "$(FinishText)"
 
-!define MUI_FINISHPAGE_SHOWREADME_TEXT "Build123dSetup website with important install information!"
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "$(ReadmeText)"
 !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
 !define MUI_FINISHPAGE_SHOWREADME "https://github.com/CePeU/Build123d-Portable-Installer"
 
@@ -125,7 +125,18 @@ Page custom ExtensionsPage ExtensionsPageLeave
 Page custom SpecialsPage SpecialsPageLeave
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
+# Keep English first as the fallback for unsupported Windows languages.
+!define MUI_LANGDLL_ALLLANGUAGES
 !insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "German"
+!insertmacro MUI_RESERVEFILE_LANGDLL
+
+!include "Languages\English.nsh"
+!include "Languages\German.nsh"
+
+Function .onInit
+    !insertmacro MUI_LANGDLL_DISPLAY
+FunctionEnd
 
 
 Var Handle_Git_Checkbox
@@ -157,7 +168,7 @@ Function DownloadURLPage
     StrCpy $Git_DownloadLink "https://github.com/git-for-windows/git/releases/download/v2.46.1.windows.1/PortableGit-2.46.1-64-bit.7z.exe"
     StrCpy $Fossil_DownloadLink "https://www.fossil-scm.org/home/uv/fossil-w64-2.24.zip"
 
-    !insertmacro MUI_HEADER_TEXT "Choose download versions of components" "Choose the URLs (and versions) for Winpython and VsCode."
+    !insertmacro MUI_HEADER_TEXT "$(DownloadTitle)" "$(DownloadSubtitle)"
 
     ###############
     # DISABLED: check for currently running Code.exe
@@ -180,13 +191,13 @@ Function DownloadURLPage
         Abort
     ${EndIf}
 
-    ${NSD_CreateCheckBox} 0 0 100% 12u "Install Winpython: Change URL below for a different version."
+    ${NSD_CreateCheckBox} 0 0 100% 12u "$(InstallWinPython)"
     Pop $Handle_Winpython_Checkbox
     ${NSD_Check} $Handle_Winpython_Checkbox
     ${NSD_CreateText} 0 12u 100% 12u "$Python_DownloadLink"
     Pop $Handle_Winpython
 
-    ${NSD_CreateCheckBox} 0 26u 100% 12u "Install VsCode: Change URL below for a different version."
+    ${NSD_CreateCheckBox} 0 26u 100% 12u "$(InstallVsCode)"
     Pop $Handle_VsCode_Checkbox
     ${NSD_Check} $Handle_VsCode_Checkbox
     ${NSD_CreateText} 0 39u 100% 12u "$VSC_DownloadLink"
@@ -194,13 +205,13 @@ Function DownloadURLPage
     Pop $Handle_VsCode
     # The handel ID ist retrieved with Pop from the stack, this time to DownloadPath variable
 
-    ${NSD_CreateCheckBox} 0 55u 100% 12u "Install Portable Git (x64): Change URL below for a different version."
+    ${NSD_CreateCheckBox} 0 55u 100% 12u "$(InstallGit)"
     Pop $Handle_Git_Checkbox
     ;${NSD_Check} $Handle_Git_Checkbox
     ${NSD_CreateText} 0 68u 100% 12u "$Git_DownloadLink"
     Pop $Handle_Git
 
-    ${NSD_CreateCheckBox} 0 84u 100% 12u "Install Fossil (x64) version control system: Change URL below for a different version."
+    ${NSD_CreateCheckBox} 0 84u 100% 12u "$(InstallFossil)"
     Pop $Handle_Fossil_Checkbox
     ;${NSD_Check} $Handle_Fossil_Checkbox
     ${NSD_CreateText} 0 97u 100% 12u "$Fossil_DownloadLink"
@@ -225,7 +236,7 @@ FunctionEnd
 
 Function ExtensionsPage
     
-    !insertmacro MUI_HEADER_TEXT "Choose Visual Studio Code extensions" "Choose Visual Studio Code extensions to be installed. Use the Marketplace ID for the extensions."
+    !insertmacro MUI_HEADER_TEXT "$(ExtensionsTitle)" "$(ExtensionsSubtitle)"
 
     nsDialogs::Create 1018
     # The Windows Handle is put on the stack
@@ -235,40 +246,40 @@ Function ExtensionsPage
         Abort
     ${EndIf}
     
-    ${NSD_CreateCheckBox} 0 0u 23% 12u "OCP Cad Viewer:"
+    ${NSD_CreateCheckBox} 0 0u 23% 12u "$(OcpLabel)"
     Pop $Handle_OCP_Checkbox
     ${NSD_Check} $Handle_OCP_Checkbox
     ${NSD_CreateText} 23% 0u 35% 12u "bernhard-42.ocp-cad-viewer"
     Pop $Handle_OCP
 
-    ${NSD_CreateCheckBox} 60% 0u 14% 12u "Python:"
+    ${NSD_CreateCheckBox} 60% 0u 14% 12u "$(PythonLabel)"
     Pop $Handle_VsCodePython_Checkbox
     ${NSD_Check} $Handle_VsCodePython_Checkbox
     ${NSD_CreateText} 74% 0u 26% 12u "ms-python.python"
     Pop $Handle_VsCodePython
 
-    ${NSD_CreateCheckBox} 0 26u 23% 12u "Frame-Indent:"
+    ${NSD_CreateCheckBox} 0 26u 23% 12u "$(FrameIndentLabel)"
     Pop $Handle_FrameIndentRainbow_Checkbox
     ${NSD_CreateText} 23% 26u 35% 12u "firejump.frame-indent-rainbow"
     Pop $Handle_FrameIndentRainbow
     
-    ${NSD_CreateCheckBox} 60% 26u 14% 12u "Jupyter:"
+    ${NSD_CreateCheckBox} 60% 26u 14% 12u "$(JupyterLabel)"
     Pop $Handle_Jupyter_Checkbox
     ${NSD_Check} $Handle_Jupyter_Checkbox
     ${NSD_CreateText} 74% 26u 26% 12u "ms-toolsai.jupyter"
     Pop $Handle_Jupyter
 
-    ${NSD_CreateCheckBox} 0 52u 23% 12u "BlackFormatter:"
+    ${NSD_CreateCheckBox} 0 52u 23% 12u "$(BlackLabel)"
     Pop $Handle_BlackFormatter_Checkbox
     ${NSD_CreateText} 23% 52u 35% 12u "ms-python.black-formatter"
     Pop $Handle_BlackFormatter
 
-    ${NSD_CreateCheckBox} 0 78u 23% 12u "STL Viewer:"
+    ${NSD_CreateCheckBox} 0 78u 23% 12u "$(StlLabel)"
     Pop $Handle_STLviewer_Checkbox
     ${NSD_CreateText} 23% 78u 35% 12u "mtsmfm.vscode-stl-viewer"
     Pop $Handle_STLviewer
     
-    ${NSD_CreateCheckBox} 0 104u 23% 12u "SVG preview:"
+    ${NSD_CreateCheckBox} 0 104u 23% 12u "$(SvgPreview)"
     Pop $Handle_SVGviewer_Checkbox
     ${NSD_CreateText} 23% 104u 35% 12u "simonsiefke.svg-preview"
     Pop $Handle_SVGviewer
@@ -314,7 +325,7 @@ Var Handle_Cleanup_Checkbox
 
 Function SpecialsPage
 
-    !insertmacro MUI_HEADER_TEXT "Additional Installations" "Install additonal stuff prefered by the developer"
+    !insertmacro MUI_HEADER_TEXT "$(SpecialsTitle)" "$(SpecialsSubtitle)"
     
     nsDialogs::Create 1018
     # The Windows Handle is put on the stack
@@ -324,22 +335,22 @@ Function SpecialsPage
         Abort
     ${EndIf}
     
-    ${NSD_CreateCheckBox} 0 56u 100% 12u "Install Cadquery"
+    ${NSD_CreateCheckBox} 0 56u 100% 12u "$(InstallCadquery)"
     Pop $Handle_Cadquery_Checkbox
 
-    ${NSD_CreateCheckBox} 0 28u 50% 12u "Workspace adjustments"
+    ${NSD_CreateCheckBox} 0 28u 100% 12u "$(WorkspaceOption)"
     Pop $Handle_Workspace_Checkbox
 
-    ${NSD_CreateCheckBox} 0 42u 50% 12u "Vscode Build123d snippets"
+    ${NSD_CreateCheckBox} 0 42u 100% 12u "$(SnippetsOption)"
     Pop $Handle_Snippet_Checkbox
 
-    ${NSD_CreateCheckBox} 0 14u 60% 12u "ThumbdriveAdjustment.cmd and Vscode.cmd"
+    ${NSD_CreateCheckBox} 0 14u 100% 12u "$(LaunchersOption)"
     Pop $Handle_StartCMD_Checkbox
     
-    ${NSD_CreateCheckBox} 0 0u 50% 12u "Create desktop shortcut"
+    ${NSD_CreateCheckBox} 0 0u 100% 12u "$(ShortcutOption)"
     Pop $Handle_Shortcut_Checkbox
 
-    ${NSD_CreateCheckBox} 0 70u 50% 12u "Cleanup and remove install files"
+    ${NSD_CreateCheckBox} 0 70u 100% 12u "$(CleanupOption)"
     Pop $Handle_Cleanup_Checkbox
     ${NSD_Check} $Handle_Cleanup_Checkbox
     nsDialogs::Show
@@ -355,7 +366,7 @@ Function SpecialsPageLeave
 FunctionEnd
 
 # Main installation section
-Section "DownloadFile" SecDownload
+Section "$(InstallSection)" SecDownload
 AddSize 2256000
     CreateDirectory "$INSTDIR\Downloads"
     Pop $0 
@@ -368,7 +379,7 @@ AddSize 2256000
         Pop $0
         
         ${If} $0 == "OK"
-            Nsis7z::ExtractWithDetails "$INSTDIR\Downloads\Winpython.exe" "Installing WinPython %s..."
+            Nsis7z::ExtractWithDetails "$INSTDIR\Downloads\Winpython.exe" "$(ExtractWinPython)"
             # Find the name of the python folder (which might change from version to version)
             FindFirst $0 $1 "$INSTDIR\WPy64*.*"
             loop:
@@ -394,13 +405,13 @@ AddSize 2256000
             FileClose $R1
             Pop $R1
             ;MessageBox MB_OK "Filewrite successfull? $R1" --> Could/should make a check here
-            DetailPrint "Additional Python packages for Build123d are installing"
+            DetailPrint "$(InstallPythonPackages)"
             #Call the cmd file to install python packages
             nsExec::ExecToStack "$INSTDIR\$PyPath\scripts\Build123dPipPackages.cmd"
             Pop $0
             Pop $1
 
-            DetailPrint "Adjusting Winpython.ini with PATH variable so that Vscode finds python"
+            DetailPrint "$(AdjustPythonPath)"
             # Adding path variable so Visual Studio Code finds python, Git and Fossil 
             ClearErrors
             FileOpen $R1 "$INSTDIR\$PyPath\settings\winpython.ini" a
@@ -416,7 +427,7 @@ AddSize 2256000
             FileClose $R1
             Pop $R1
             ${Else}
-            MessageBox MB_OK "Winpython Download failed: $0"
+            MessageBox MB_OK "$(WinPythonDownloadFailed)"
         ${EndIf}
     ${Endif} #Endif of installation of python
 
@@ -436,20 +447,20 @@ AddSize 2256000
             nsisunz::UnzipToStack "$INSTDIR\Downloads\VsCode.zip" "$VsCodeINSTDIR"
             Pop $0
             ${If} ${Errors}
-                MessageBox MB_OK  "Could not unzip VsCode"
+                MessageBox MB_OK  "$(VsCodeUnzipFailed)"
                 Abort
             ${EndIf}
             ClearErrors
-            DetailPrint "Creating necessary data directory to make VsCode portable"
+            DetailPrint "$(CreateVsCodeData)"
             CreateDirectory "$VsCodeINSTDIR\data\user-data\User"
             CreateDirectory "$VsCodeINSTDIR\data\tmp"
             Pop $0
             Sleep 4000
             ${If} ${Errors}
-                MessageBox MB_OK "Failed to create directory"
+                MessageBox MB_OK "$(CreateDirectoryFailed)"
                 Abort
                 ${Else}
-                DetailPrint "Necessary additional Visual Studio Code 'data' directory was created"
+                DetailPrint "$(VsCodeDataCreated)"
                 Sleep 4000
             ${EndIf}
     
@@ -460,26 +471,26 @@ AddSize 2256000
 
                 ${If} $0 == "OK"
                     ClearErrors
-                    DetailPrint "Creating seperate directory for Fossil SVN"
+                    DetailPrint "$(CreateFossilDirectory)"
                     CreateDirectory "$VsCodeINSTDIR\data\Fossil"
                     Sleep 4000
                     Pop $0
                     ${If} ${Errors}
-                        MessageBox MB_OK "Failed to create directory"
+                        MessageBox MB_OK "$(CreateDirectoryFailed)"
                         Abort
                         ${Else}
-                        DetailPrint "Fossil directory was created"
+                        DetailPrint "$(FossilDirectoryCreated)"
                         Sleep 4000
                     ${EndIf}
                     ClearErrors
                     nsisunz::UnzipToStack "$INSTDIR\Downloads\Fossil.zip" "$VsCodeINSTDIR\data\Fossil"
                     Pop $0
                     ${If} ${Errors}
-                        MessageBox MB_OK  "Could not unzip Fossil source control"
+                        MessageBox MB_OK  "$(FossilUnzipFailed)"
                         Abort
                     ${EndIf}
                     ${Else}
-                    MessageBox MB_OK "Fossil Download failed: $0"
+                    MessageBox MB_OK "$(FossilDownloadFailed)"
                 ${EndIf}
             ${EndIf}
 
@@ -490,35 +501,35 @@ AddSize 2256000
                 Pop $0
                 ${If} $0 == "OK"
                         ClearErrors
-                        DetailPrint "Creating seperate directory for Git SVN"
+                        DetailPrint "$(CreateGitDirectory)"
                         CreateDirectory "$VsCodeINSTDIR\data\GitPortable"
                         Sleep 4000
                         Pop $0
                         ${If} ${Errors}
-                                MessageBox MB_OK "Failed to create directory"
+                                MessageBox MB_OK "$(CreateDirectoryFailed)"
                                 Abort
                             ${Else}
-                                DetailPrint "GitPortable directory was created"
+                                DetailPrint "$(GitDirectoryCreated)"
                                 Sleep 4000
                         ${EndIf}
                         StrCpy $3 "$VsCodeINSTDIR\data\GitPortable\"
                         SetOutPath $3
                         ClearErrors
-                        Nsis7z::ExtractWithDetails "$INSTDIR\Downloads\Git.zip" "Installing Git Portable %s..."
+                        Nsis7z::ExtractWithDetails "$INSTDIR\Downloads\Git.zip" "$(ExtractGit)"
                         ;nsisunz::UnzipToStack "$INSTDIR\Downloads\Git.zip" "$VsCodeINSTDIR\data\GitPortable"
                         Pop $0                        
                         ${If} ${Errors}
-                            MessageBox MB_OK  "Could not unzip Git source control"
+                            MessageBox MB_OK  "$(GitUnzipFailed)"
                             Abort
                         ${EndIf}
                     ${Else}
-                        MessageBox MB_OK "Git portable Download failed: $0"
+                        MessageBox MB_OK "$(GitDownloadFailed)"
                 ${EndIf}
             ${EndIf}
 
             ${if} $Workspace_Checkbox == 1
                 # This is a personal preference and can all be omitted
-                DetailPrint "Adjusting VsCode Workspace settings in $VsCodeINSTDIR\data\user-data\User\settings.json"
+                DetailPrint "$(AdjustWorkspace)"
                 Sleep 4000
                 ClearErrors
                 FileOpen $R1 "$VsCodeINSTDIR\data\user-data\User\settings.json" a
@@ -538,7 +549,7 @@ AddSize 2256000
 
             # Scipt needs adjusting for VsCode only install and maybe for fossil and git
             ${if} $StartCMD_Checkbox == 1
-                DetailPrint "Creating VsCode ThumbdriveAdjust.cmd"
+                DetailPrint "$(CreateThumbdriveScript)"
                 Sleep 4000
                 ${If} $WinpythonURL_Checkbox == 1
                         FileOpen $R1 "$INSTDIR\$PyPath\ThumbdriveAdjust.cmd" w
@@ -586,7 +597,7 @@ AddSize 2256000
 
             ${if} $StartCMD_Checkbox == 1
                 ${If} $WinpythonURL_Checkbox <> 1
-                    DetailPrint "Creating VsCode.cmd'"
+                    DetailPrint "$(CreateLauncher)"
                     Sleep 4000
                     FileOpen $R1 "$VsCodeINSTDIR\VsCode.cmd" w
                     FileWrite $R1 "PATH=%PATH%"
@@ -612,49 +623,49 @@ AddSize 2256000
             SetOutPath $3
             
             ${if} $OCP_Checkbox == 1
-                DetailPrint "Installing VsCode extension $OCP"
+                DetailPrint "$(InstallExtension) $OCP"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $OCP"'
             ${EndIf}
 
             ${if} $VsCodePython_Checkbox == 1
-                DetailPrint "Installing VsCode extension $VsCodePython"
+                DetailPrint "$(InstallExtension) $VsCodePython"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $VsCodePython"'
             ${EndIf}
             
             ${if} $Jupyter_Checkbox == 1
-                DetailPrint "Installing VsCode extension $Jupyter"
+                DetailPrint "$(InstallExtension) $Jupyter"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $Jupyter"'
             ${EndIf}
 
             ${if} $FrameIndentRainbow_Checkbox == 1
-                DetailPrint "Installing VsCode extension $FrameIndentRainbow"
+                DetailPrint "$(InstallExtension) $FrameIndentRainbow"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $FrameIndentRainbow"'
             ${EndIf}
 
             ${if} $STLviewer_Checkbox == 1
-                DetailPrint "Installing VsCode extension $STLviewer"
+                DetailPrint "$(InstallExtension) $STLviewer"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $STLviewer"'
             ${EndIf}
 
             ${if} $BlackFormatter_Checkbox == 1
-                DetailPrint "Installing VsCode extension $BlackFormatter"
+                DetailPrint "$(InstallExtension) $BlackFormatter"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $BlackFormatter"'
             ${EndIf}
         
             ${if} $SVGviewer_Checkbox == 1
-                DetailPrint "Installing VsCode extension $SVGviewer"
+                DetailPrint "$(InstallExtension) $SVGviewer"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension $SVGviewer"'
             ${EndIf}
 
             ${if} $Fossil_Checkbox == 1
-                DetailPrint "Installing VsCode extension for Fossil"
+                DetailPrint "$(InstallFossilExtension)"
                 Sleep 4000
                 nsExec::ExecToStack  'cmd /k "$outdir\Code.cmd --install-extension koog1000.fossil'
             ${EndIf}
@@ -673,7 +684,7 @@ AddSize 2256000
             ${EndIf}
 
             ${Else}
-                MessageBox MB_OK "VsCode Download failed: $0"
+                MessageBox MB_OK "$(VsCodeDownloadFailed)"
         ${EndIf}
     ${EndIf}
 

@@ -1,5 +1,28 @@
 # Build123d-Portable-Installer
 
+## Installer languages
+
+The installer supports English and German. A language picker appears before the
+welcome page, with the Windows language selected when supported and English as
+the fallback. The selection applies to the standard wizard pages, custom options,
+installation messages, and error dialogs. Language selection does not write to
+the registry. Downloaded software and its own output use their own language settings.
+
+Custom translations are stored in `Languages/English.nsh` and
+`Languages/German.nsh` as UTF-8 files. To add a language:
+
+1. Copy `Languages/English.nsh` to a new language file and translate each text,
+   keeping the `LangString` names unchanged.
+2. Replace `${LANG_ENGLISH}` with the NSIS language constant for that language.
+3. Add its `!insertmacro MUI_LANGUAGE "LanguageName"` beside the existing language
+   declarations in `Build123dPortableSetup.nsi`, before `MUI_RESERVEFILE_LANGDLL`.
+4. Include the new translation file beside the existing language includes.
+5. Preserve runtime variables such as `$0` and `$VsCodeINSTDIR`, line breaks
+   (`$\r$\n`), and the `%s` extraction placeholder. Escape embedded double quotes
+   as `$\"`.
+6. Compile using the existing NSIS build workflow and check the custom pages for
+   clipped labels in the new language.
+
 ## General Information and first start
 This is a NSIS based installer for a portable Windows IDE environment for build123d, python and VsCode.
 
